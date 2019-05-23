@@ -1,0 +1,596 @@
+<!--Copyright (c) 2010-2013 three.js authors
+Released under the MIT license
+https://opensource.org/licenses/mit-license.php-->
+
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"/>
+  <link rel="stylesheet" href="./style.css"/>
+      <style>
+      #cv
+      {
+      	left:0px;
+        position:fixed;
+        width: 1280px;
+        height: 720px;
+        z-index:2;
+      }
+      #myVideo
+      {
+      	left:0px;
+        position:fixed;
+        width: 1280px;
+        height: 720px;
+        z-index:1;
+      }
+      #div1
+      {
+        position:fixed;
+        top:10px;
+        left:10px;
+        z-index:3;
+        font-size:8px;
+      }
+      #div2
+      {
+        position:fixed;
+        top:10px;
+        right:10px;
+        z-index:3;
+        font-size:8px;
+      }
+    </style>
+ <script src="./js/three.min.js" ></script>
+ <!--script src="./js/OrbitControls.js"></script-->
+ <title>3d_xyz</title>
+</head>
+
+
+<body>
+<!--script src="./js/TrackballControls.js"></script-->
+<div id="cv" onmousemove="mouse(event)"></div>
+<video id="myVideo" preload autoplay muted style=""></video >
+<!--visibility:hidden-->
+
+<div id="div1">
+
+<label for="txt1">point1(a)_x:</label>
+<input type="text" id="txt1" size="10">
+<label for="txt100">_y:</label>
+<input type="text" id="txt100" size="10">
+<label for="txt2">_z:</label>
+<input type="text" id="txt2" size="10">
+<br>
+<label for="txt3">point2(z)_x:</label>
+<input type="text" id="txt3" size="10">
+<label for="txt101">_y:</label>
+<input type="text" id="txt101" size="10">
+<label for="txt4">_z:</label>
+<input type="text" id="txt4" size="10">
+<br>
+<label for="txt5">distance:&nbsp;&nbsp;&nbsp;&nbsp;</label>
+<input type="text" id="txt5" size="10">
+&nbsp;&nbsp;&nbsp;&nbsp;
+<input type="button" id="btn1" value="plane_on" size="10">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type="button" id="btn2" value="plane_off" size="10">
+<br>
+<label for="txt10">point3(x)_x:</label>
+<input type="text" id="txt10" size="10">
+<label for="txt10">_y:</label>
+<input type="text" id="txt11" size="10">
+<label for="txt11">_z:</label>
+<input type="text" id="txt12" size="10">
+<br>
+<label for="txt13">top_y:</label>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type="text" id="txt13" size="10">
+<br>
+<label for="txt6">multi_para:</label>
+<input type="text" id="kake" value="1" size="10">
+</div>
+
+<div id="div2">
+<input type="button" id="stt" value="REC_start" size="10">
+<input type="button" id="stop" value="REC_stop" size="10">
+<input type="button" id="download" value="保存" size="10">
+<br>
+<input type="button" id="play" value="play" size="10">
+<input type="button" id="pause" value="pause" size="10">
+<input type="button" id="komaback" value="<" size="5">
+<input type="button" id="koma" value=">" size="5">
+<br>
+<label">time:</label>
+<input type="range" id="time" value="0" min="0" max="1" step="0.01"
+  oninput="document.getElementById('output3').value=this.value">
+  <output id="output3"></output>
+
+<br>
+<input type="button" id="live" value="live" size="10">
+<input type="file" id="fileid">
+<br>
+<label for="camRotX">camRot(X,Y,Z):</label>
+<input type="text" id="camRotX" value="" size="10">
+<input type="text" id="camRotY" value="" size="10">
+<input type="text" id="camRotZ" value="" size="10">
+<br>
+<label for="camPosX">camPos(X,Y,Z):</label>
+<input type="text" id="camPosX" value="" size="10">
+<input type="text" id="camPosY" value="" size="10">
+<input type="text" id="camPosZ" value="" size="10">
+<br>
+<label">PlanePosY:</label>
+<input type="range" id="posY" value="0" min="-1000" max="1000" step="1"
+  oninput="document.getElementById('output1').value=this.value">
+  <output id="output1">0</output>
+<br>
+<label">RotX:</label>
+<input type="range" id="rotX" value="0" min="-50" max="50" step="1"
+  oninput="document.getElementById('output2').value=this.value">
+  <output id="output2">0</output>
+
+</div>
+<script>
+
+var renderer;
+var scene;
+var camera;
+var geometry;
+var material;
+var mesh;
+var gridHelper;
+var axesHelper;
+var plane;
+var controls;
+
+var width  = 1280;
+var height = 720;
+var fov    = 60;
+var aspect = width / height;
+var near   = 1;
+var far    = 2500;
+var canvas;
+var wireframe;
+var directionalLight;
+
+var raycaster = new THREE.Raycaster(); // create once and reuse
+var ms = new THREE.Vector2(); // create once and reuse
+var intersects;
+
+var kake_value;
+var p1x;
+var p1z;
+var p2x;
+var p2z;
+var p3x,p3y,p3z;
+
+var planeGeo;
+var planeMat;
+var planeMesh;
+//raycast受けるobj
+var objects;
+
+var flg=0;
+var video;
+
+
+
+
+init();
+animate();
+
+
+ document.getElementById("fileid").onchange=function(evt)
+ {
+ video.srcObject = null;
+
+    var file = evt.target.files;
+    var reader = new FileReader();
+    reader.readAsDataURL(file[0]);
+    reader.onload = function()
+    {
+        dataUrl = reader.result;
+        //console.log(dataUrl);
+        video.src=dataUrl;
+
+    }
+    document.getElementById("fileid").value = '';
+ }
+
+
+  function init()
+{
+
+//localStorage
+document.getElementById("kake").value=localStorage.getItem("num1");
+
+
+
+  scene = new THREE.Scene();
+  camera = new THREE.PerspectiveCamera( fov, aspect, near, far );
+
+  camera.position.set( 0, 10, 30);
+  camera.lookAt(new THREE.Vector3(0, 0, 0));
+  //localStorage
+  //camera.rotation.x=localStorage.getItem("num2");
+
+  canvas = document.getElementById("cv");
+      renderer = new THREE.WebGLRenderer({ antialias: true,alpha: true });
+      renderer.setPixelRatio(window.devicePixelRatio);
+      renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+      renderer.setClearColor(0x000000, 0); // レンダラーの背景色を黒色（不透過）に設定
+  canvas.appendChild(renderer.domElement); // div領域にcgレンダラーを配置
+
+  directionalLight = new THREE.DirectionalLight( 0xffffff );
+  directionalLight.position.set( 0, 0.7, 0.7 );
+  scene.add( directionalLight );
+
+
+
+
+  gridHelper = new THREE.GridHelper(1000, 100,0x444444,0xaaaaaa);
+  scene.add(gridHelper);
+  axesHelper = new THREE.AxesHelper(1000);
+  scene.add(axesHelper);
+  //controls = new THREE.OrbitControls(camera,canvas);
+  //controls = new THREE.TrackballControls(camera,canvas);
+  //localStorage
+  // console.log(localStorage.getItem("num2"));
+
+
+
+
+
+
+// width:100, height:100, widthSegments:1, heightSegments:1
+   plane =  new THREE.Mesh(new THREE.PlaneGeometry(1000, 1000, 10,1),
+              new THREE.MeshLambertMaterial(
+                {
+                color: 0x000000,
+                wireframe: false,
+                opacity:0.0
+                }));
+  scene.add(plane);
+  plane.rotation.set(Math.PI*3/2,0,0);
+
+  geometry = new THREE.CubeGeometry( 1000, 10, 1000 );
+  var geo = new THREE.EdgesGeometry( geometry ); // or WireframeGeometry( geometry )
+  var mat = new THREE.LineBasicMaterial( { color: 0xff44ff, linewidth: 2 } );
+
+  wireframe = new THREE.LineSegments( geo, mat );
+
+  scene.add( wireframe );
+
+
+  video=document.getElementById("myVideo");
+  var media=navigator.mediaDevices.getUserMedia(
+  {
+  audio: false,
+  video: {
+  	aspectRatio: {exact: 1.7777777778}
+  }
+
+  });
+
+  media.then(function(stream)
+  {
+  video.srcObject = stream;
+
+  //recorder
+
+  recorder = new MediaRecorder(stream,{
+  videoBitsPerSecond : 512000, // 512kbits / sec
+  mimeType : 'video/webm; codecs=vp9'
+  }) // 映像の入力ソースをユーザーのデバイスから取得
+  console.log(recorder);
+    recorder.ondataavailable = function (e)//rec終了のタイミングで呼び出される
+    {
+
+      video.srcObject = null;
+
+      video.setAttribute('controls', '')
+      video.setAttribute('width', width)
+      video.setAttribute('height', height)
+      var outputdata = window.URL.createObjectURL(e.data) // videoタグが扱えるように、記録データを加工
+
+      video.src = outputdata // テスト用のビデオのソースに記録データを設置
+      video.onended = function()
+      {
+      video.pause();
+      };
+
+      //video download
+      document.getElementById("download").addEventListener('click', function(ev)
+      {
+      var a = document.createElement('a') //download属性を持ったaタグをクリックするとダウンロードができるので、それをシミュレートする
+      document.body.appendChild(a)
+      a.style = 'display:none'
+      a.href = outputdata ;
+      var day = new Date();
+      a.download = day + '.webm'
+      a.click()
+      window.URL.revokeObjectURL(outputdata )
+     })
+
+    }
+
+      document.getElementById("live").addEventListener('click', function(ev)
+      {
+      video.srcObject = stream;
+      })
+
+//mediastreamの括弧
+  })
+
+
+//deviceId取得
+  navigator.mediaDevices.enumerateDevices()
+.then(function(devices)
+ {
+  devices.forEach(function(device)
+  {
+    console.log(device.kind + ": " + device.label +
+                " id = " + device.deviceId);
+  });
+ })
+.catch(function(err)
+ {
+  console.log(err.name + ": " + error.message);
+ });
+
+//initの括弧
+}
+
+ function animate()
+    {
+
+        renderer.render( scene, camera );
+        requestAnimationFrame(animate);
+        //controls.update();
+
+
+        document.getElementById("camRotX").value=camera.rotation.x.toFixed(2);
+        document.getElementById("camRotY").value=camera.rotation.y.toFixed(2);
+        document.getElementById("camRotZ").value=camera.rotation.z.toFixed(2);
+
+        document.getElementById("camPosX").value=camera.position.x.toFixed(2);
+        document.getElementById("camPosY").value=camera.position.y.toFixed(2);
+        document.getElementById("camPosZ").value=camera.position.z.toFixed(2);
+
+        gridHelper.position.y=document.getElementById('posY').value;
+        wireframe.position.set(0,document.getElementById('posY').value,0);
+        plane.position.y=document.getElementById('posY').value;
+        axesHelper.position.y=document.getElementById('posY').value;
+
+
+
+  var rot=0; // 角度
+  // マウスの位置に応じて角度を設定
+  // マウスのX座標がステージの幅の何%の位置にあるか調べてそれを360度で乗算する
+  var targetRot = (document.getElementById('rotX').value) * 180;
+  // イージングの公式を用いて滑らかにする
+  // 値 += (目標値 - 現在の値) * 減速値
+  rot += (targetRot - rot)* 0.02;
+  // ラジアンに変換する
+  var radian = rot * Math.PI / 180;
+  // 角度に応じてカメラの位置を設定
+  camera.position.x = 1000 * Math.sin(radian);
+  camera.position.z = 1000 * Math.cos(radian);
+  // 原点方向を見つめる
+  camera.lookAt(new THREE.Vector3(0, 0, 0));
+
+    }
+
+
+function mouse(event)
+{
+
+objects = [];
+
+if(flg==1){
+objects.push(planeMesh);
+}else
+{
+objects.push(plane);
+}
+
+
+    var element = event.currentTarget;
+
+    // スクリーン上のマウス位置を取得する
+    //currentTargetとoffset,elementじゃないとレイずれる
+    var mouseX = event.clientX - element.offsetLeft;
+    var mouseY = event.clientY - element.offsetTop;
+    var w = element.offsetWidth;
+    var h = element.offsetHeight;
+
+    // 取得したスクリーン座標を-1〜1に正規化する（WebGLは-1〜1で座標が表現される）
+    ms.x =  (mouseX/w)  * 2 - 1;
+    ms.y = -(mouseY/h) * 2 + 1;
+// レイキャスト = マウス位置からまっすぐに伸びる光線ベクトルを生成
+    raycaster.setFromCamera( ms, camera );
+
+
+
+intersects = raycaster.intersectObjects(objects, false);
+
+if ( intersects.length > 0 )
+{
+    //console.log( intersects[ 0 ].point.x);
+    //console.log( intersects[ 0 ].point.z);
+
+};
+
+
+
+//mouse(event)の括弧
+};
+
+
+document.onkeydown = pageMove;
+function pageMove()
+{
+  if (event.keyCode == 65)  //「a」が押されたか確認
+  {
+    document.getElementById("txt1").value=intersects[0].point.x.toFixed(2);
+    document.getElementById("txt100").value=intersects[0].point.y.toFixed(2);
+    document.getElementById("txt2").value=intersects[0].point.z.toFixed(2);
+  }
+  if (event.keyCode == 90)  //「z」が押されたか確認
+  {
+  	kake_value=document.getElementById("kake").value
+  	document.getElementById("txt3").value=intersects[0].point.x.toFixed(2);
+  	document.getElementById("txt101").value=intersects[0].point.y.toFixed(2);
+    document.getElementById("txt4").value=intersects[0].point.z.toFixed(2);
+    p1x=document.getElementById("txt1").value;
+    p1y=document.getElementById("txt100").value;
+    p1z=document.getElementById("txt2").value;
+    p2x=document.getElementById("txt3").value;
+    p2y=document.getElementById("txt101").value;
+    p2z=document.getElementById("txt4").value;
+    document.getElementById("txt5").value=Math.sqrt(Math.pow((p2x-p1x),2)+Math.pow((p2z-p1z),2)).toFixed(2)*kake_value;
+
+
+  }
+
+    if (event.keyCode == 88)  //「x」が押されたか確認
+  {
+  	kake_value=document.getElementById("kake").value
+    document.getElementById("txt10").value=intersects[0].point.x.toFixed(2);
+    document.getElementById("txt11").value=intersects[0].point.y.toFixed(2);
+    document.getElementById("txt12").value=intersects[0].point.z.toFixed(2);
+    p3x=document.getElementById("txt10").value;
+    p3y=document.getElementById("txt11").value;
+    p3z=document.getElementById("txt12").value;
+
+　var a;
+  var b;
+  var c;
+  var x1,x2,x3,y1,y2,y3;
+
+  x1=p1x;
+  y1=p1y;
+  z1=p1z;
+  x2=p2x;
+  y2=p2y;
+  z2=p2z;
+  x3=p3x;
+  y3=p3y;
+  z3=p3z;
+
+   //a = ((y1 - y2) * (x1 - x3) - (y1 - y3) * (x1 - x2)) / ((x1 - x2) * (x1 - x3) * (x2 - x3));
+   //b = (y1 - y2) / (x1 - x2) - a * (x1 + x2);
+　　//c = y1 - a * x1 * x1 - b * x1;
+   a = ((y1 - y2) * (x1 - x3) - (y1 - y3) * (x1 - x2)) / ((x1 - x2) * (x1 - x3) * (x2 - x3));
+   b = (y1-y2)/(x1-x2)-a*(parseFloat(x1) + parseFloat(x2));
+　 c = y1-a*x1*x1-b*x1;
+
+  //p1y引くのは平面マイナス値にした場合のための措置
+　 document.getElementById("txt13").value= ((parseFloat(-b*b) + parseFloat(4*a*c))/(4*a)-p1y)*kake_value;
+
+  }
+
+
+  document.getElementById("btn1").onclick=function mkPlane()
+  {
+
+  flg=1;
+
+　planeGeo = new THREE.Geometry();
+
+  planeGeo.vertices.push(new THREE.Vector3(p1x, p1y, p1z));
+  planeGeo.vertices.push(new THREE.Vector3(p2x, p2y, p2z));
+  planeGeo.vertices.push(new THREE.Vector3(p1x, parseInt(p1y) + 80, p1z));
+  planeGeo.vertices.push(new THREE.Vector3(p2x, parseInt(p2y) + 80, p2z));
+
+  planeGeo.faces.push(new THREE.Face3( 0, 1, 2));
+  planeGeo.faces.push(new THREE.Face3( 3, 2, 1));
+
+  planeGeo.computeFaceNormals();
+
+  planeMat = new THREE.MeshLambertMaterial(
+                {
+                color: 0x119911,
+                wireframe: true,
+                opacity:1
+                });
+  planeMat.side=THREE.DoubleSide;
+  planeMesh = new THREE.Mesh(planeGeo,planeMat);
+  scene.add(planeMesh);
+  }
+
+
+  document.getElementById("btn2").onclick=function eraPlane()
+  {
+  flg=0;
+  scene.remove(planeMesh);
+
+    p1x=document.getElementById("txt1").value=0;
+    p1y=document.getElementById("txt100").value=0;
+    p1z=document.getElementById("txt2").value=0;
+    p2x=document.getElementById("txt3").value=0;
+    p2y=document.getElementById("txt101").value=0;
+    p2z=document.getElementById("txt4").value=0;
+    document.getElementById("txt5").value=0;
+    p3x=document.getElementById("txt10").value=0;
+    p3y=document.getElementById("txt11").value=0;
+    p3z=document.getElementById("txt12").value=0;
+    document.getElementById("txt13").value=0;
+  }
+//pagemoveの括弧
+}
+
+//recorder
+  document.getElementById("stt").addEventListener('click', function(ev){
+    recorder.start()
+    ev.preventDefault()
+  }, false);
+
+  document.getElementById("stop").addEventListener('click', function(ev) {
+    recorder.stop()
+  })
+
+  document.getElementById("play").addEventListener('click', function(ev) {
+  	video.playbackRate = 1;
+  	video.play();
+  	document.getElementById('time').value = video.currentTime/video.duration;
+  })
+    document.getElementById("pause").addEventListener('click', function(ev) {
+    video.pause();
+    document.getElementById('time').value=video.currentTime/video.duration;
+  })
+  document.getElementById("koma").addEventListener('click', function(ev) {
+  video.currentTime += 1/60;
+  document.getElementById('time').value=video.currentTime/video.duration;
+  })
+  document.getElementById("komaback").addEventListener('click', function(ev) {
+  video.currentTime -= 1/60;
+  document.getElementById('time').value=video.currentTime/video.duration;
+  })
+  document.getElementById("time").addEventListener('click', function(ev) {
+  //document.getElementById('time').value = video.currentTime/video.duration
+  video.currentTime = document.getElementById('time').value * video.duration;
+  })
+
+
+
+
+
+//localstorage保存
+document.getElementById("kake").addEventListener('change', function(ev)
+   {
+   	kake_value=document.getElementById("kake").value;
+   	//console.log(kake_value);
+   });
+
+
+
+
+
+</script>
+
+</body>
+</html>
