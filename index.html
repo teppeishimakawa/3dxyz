@@ -52,7 +52,7 @@ https://opensource.org/licenses/mit-license.php-->
 <body>
 <!--script src="./js/TrackballControls.js"></script-->
 <div id="cv" onmousemove="mouse(event)"></div>
-<video id="myVideo" preload autoplay muted style=""></video >
+<video id="myVideo" preload autoplay muted style="visibility:hidden"></video >
 <!--visibility:hidden-->
 
 <div id="div1">
@@ -91,6 +91,8 @@ https://opensource.org/licenses/mit-license.php-->
 <br>
 <label for="txt6">multi_para:</label>
 <input type="text" id="kake" value="1" size="10">
+<br>
+<input type="button" id="conf" value="save_conf" size="10">
 </div>
 
 <div id="div2">
@@ -122,15 +124,38 @@ https://opensource.org/licenses/mit-license.php-->
 <input type="text" id="camPosY" value="" size="10">
 <input type="text" id="camPosZ" value="" size="10">
 <br>
+<label">PlanePosX:</label>
+<input type="range" id="posX" value="0" min="-1000" max="1000" step="1"
+  oninput="document.getElementById('output11').value=this.value">
+  <output id="output11">0</output>
+<br>
 <label">PlanePosY:</label>
 <input type="range" id="posY" value="0" min="-1000" max="1000" step="1"
   oninput="document.getElementById('output1').value=this.value">
   <output id="output1">0</output>
 <br>
-<label">RotX:</label>
-<input type="range" id="rotX" value="0" min="-50" max="50" step="1"
+<label">PlanePosZ:</label>
+<input type="range" id="posZ" value="0" min="-1000" max="1000" step="1"
+  oninput="document.getElementById('output111').value=this.value">
+  <output id="output111">0</output>
+<br>
+<label">CamRotX:</label>
+<input type="range" id="rotX" value="-25" min="-75" max="25" step="0.5"
   oninput="document.getElementById('output2').value=this.value">
   <output id="output2">0</output>
+<br>
+<label">CamRotY:</label>
+<input type="range" id="rotY" value="0" min="-25" max="25" step="1"
+  oninput="document.getElementById('output4').value=this.value">
+  <output id="output4">0</output>
+<br>
+<label">fov:</label>
+<input type="range" id="fov" value="60" min="1" max="200" step="1"
+  oninput="document.getElementById('outputFov').value=this.value">
+  <output id="outputFov">60</output>
+
+
+<!--input type="checkbox" id="check"-->
 
 </div>
 <script>
@@ -148,7 +173,7 @@ var controls;
 
 var width  = 1280;
 var height = 720;
-var fov    = 60;
+var fov;
 var aspect = width / height;
 var near   = 1;
 var far    = 2500;
@@ -207,15 +232,33 @@ animate();
 //localStorage
 document.getElementById("kake").value=localStorage.getItem("num1");
 
+document.getElementById("posX").value=localStorage.getItem("num2");
+document.getElementById("output11").value=localStorage.getItem("num200");
 
+document.getElementById("posY").value=localStorage.getItem("num3");
+document.getElementById("output1").value=localStorage.getItem("num300");
+
+document.getElementById("posZ").value=localStorage.getItem("num4");
+document.getElementById("output111").value=localStorage.getItem("num400");
+
+document.getElementById("rotX").value=localStorage.getItem("num5");
+document.getElementById("output2").value=localStorage.getItem("num500");
+
+document.getElementById("rotY").value=localStorage.getItem("num6");
+document.getElementById("output4").value=localStorage.getItem("num600");
+
+document.getElementById("fov").value=localStorage.getItem("num7");
+document.getElementById("outputFov").value=localStorage.getItem("num700");
+
+
+fov=document.getElementById("fov").value;
 
   scene = new THREE.Scene();
   camera = new THREE.PerspectiveCamera( fov, aspect, near, far );
 
   camera.position.set( 0, 10, 30);
-  camera.lookAt(new THREE.Vector3(0, 0, 0));
-  //localStorage
-  //camera.rotation.x=localStorage.getItem("num2");
+  //camera.lookAt(new THREE.Vector3(0, 0, 0));
+
 
   canvas = document.getElementById("cv");
       renderer = new THREE.WebGLRenderer({ antialias: true,alpha: true });
@@ -237,8 +280,7 @@ document.getElementById("kake").value=localStorage.getItem("num1");
   scene.add(axesHelper);
   //controls = new THREE.OrbitControls(camera,canvas);
   //controls = new THREE.TrackballControls(camera,canvas);
-  //localStorage
-  // console.log(localStorage.getItem("num2"));
+
 
 
 
@@ -344,6 +386,9 @@ document.getElementById("kake").value=localStorage.getItem("num1");
 //initの括弧
 }
 
+
+
+
  function animate()
     {
 
@@ -361,27 +406,42 @@ document.getElementById("kake").value=localStorage.getItem("num1");
         document.getElementById("camPosZ").value=camera.position.z.toFixed(2);
 
         gridHelper.position.y=document.getElementById('posY').value;
-        wireframe.position.set(0,document.getElementById('posY').value,0);
+        wireframe.position.set(document.getElementById('posX').value,document.getElementById('posY').value,document.getElementById('posZ').value);
         plane.position.y=document.getElementById('posY').value;
         axesHelper.position.y=document.getElementById('posY').value;
 
+        gridHelper.position.x=document.getElementById('posX').value;
+        plane.position.x=document.getElementById('posX').value;
+        axesHelper.position.x=document.getElementById('posX').value;
+
+        gridHelper.position.z=document.getElementById('posZ').value;
+        plane.position.z=document.getElementById('posZ').value;
+        axesHelper.position.z=document.getElementById('posZ').value;
 
 
+//rotYのrange操作
+  var rot1=0;
+  var targetRot1 = (document.getElementById('rotX').value) * 180;
+  rot1 += (targetRot1 - rot1)* 0.02;
+  var radian1 = (rot1-180) * Math.PI / 180;
+
+//rotXのrange操作
   var rot=0; // 角度
-  // マウスの位置に応じて角度を設定
-  // マウスのX座標がステージの幅の何%の位置にあるか調べてそれを360度で乗算する
-  var targetRot = (document.getElementById('rotX').value) * 180;
+  var targetRot = (document.getElementById('rotY').value) * 180;
   // イージングの公式を用いて滑らかにする
   // 値 += (目標値 - 現在の値) * 減速値
   rot += (targetRot - rot)* 0.02;
   // ラジアンに変換する
   var radian = rot * Math.PI / 180;
   // 角度に応じてカメラの位置を設定
-  camera.position.x = 1000 * Math.sin(radian);
-  camera.position.z = 1000 * Math.cos(radian);
-  // 原点方向を見つめる
-  camera.lookAt(new THREE.Vector3(0, 0, 0));
+  camera.position.x = -1000 * Math.cos(radian)*Math.cos(radian1);
+  camera.position.y = 1000 * Math.sin(radian) ;
+  camera.position.z = 1000 * Math.cos(radian)*Math.sin(radian1);
+  //console.log(a);
 
+  camera.lookAt(new THREE.Vector3(0,0,0));
+
+//animateの括弧
     }
 
 
@@ -574,16 +634,31 @@ function pageMove()
   //document.getElementById('time').value = video.currentTime/video.duration
   video.currentTime = document.getElementById('time').value * video.duration;
   })
-
-
+  document.getElementById("fov").addEventListener('change', function(ev) {
+  camera.fov=document.getElementById("fov").value;
+  camera.updateProjectionMatrix();
+  })
 
 
 
 //localstorage保存
-document.getElementById("kake").addEventListener('change', function(ev)
+document.getElementById("conf").addEventListener('click', function(ev)
    {
-   	kake_value=document.getElementById("kake").value;
-   	//console.log(kake_value);
+   	localStorage.setItem("num1",document.getElementById("kake").value);
+
+   	localStorage.setItem("num2",document.getElementById("posX").value);
+   	localStorage.setItem("num200",document.getElementById("output11").value);
+   	localStorage.setItem("num3",document.getElementById("posY").value);
+   	localStorage.setItem("num300",document.getElementById("output1").value);
+   	localStorage.setItem("num4",document.getElementById("posZ").value);
+   	localStorage.setItem("num400",document.getElementById("output111").value);
+   	localStorage.setItem("num5",document.getElementById("rotX").value);
+   	localStorage.setItem("num500",document.getElementById("output2").value);
+   	localStorage.setItem("num6",document.getElementById("rotY").value);
+   	localStorage.setItem("num600",document.getElementById("output4").value);
+
+   	localStorage.setItem("num7",document.getElementById("fov").value);
+   	localStorage.setItem("num700",document.getElementById("outputFov").value);
    });
 
 
