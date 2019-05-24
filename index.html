@@ -93,6 +93,7 @@ https://opensource.org/licenses/mit-license.php-->
 <input type="text" id="kake" value="1" size="10">
 <br>
 <input type="button" id="conf" value="save_conf" size="10">
+<input type="button" id="default" value="default" size="10">
 </div>
 
 <div id="div2">
@@ -606,11 +607,15 @@ function pageMove()
 //recorder
   document.getElementById("stt").addEventListener('click', function(ev){
     recorder.start()
+    document.getElementById("stt").style.color="#ffffff";
+    document.getElementById("stt").style.backgroundColor="#ff4500";
     ev.preventDefault()
   }, false);
 
   document.getElementById("stop").addEventListener('click', function(ev) {
     recorder.stop()
+    document.getElementById("stt").style.color="#000000";
+    document.getElementById("stt").style.backgroundColor="#ffffff";
   })
 
   document.getElementById("play").addEventListener('click', function(ev) {
@@ -661,6 +666,16 @@ document.getElementById("conf").addEventListener('click', function(ev)
    	localStorage.setItem("num700",document.getElementById("outputFov").value);
    });
 
+document.getElementById("default").addEventListener('click', function(ev)
+   {
+  document.getElementById("kake").value=1;
+  document.getElementById("posX").value
+  document.getElementById("output11").value
+
+
+
+
+   });
 
 
 
