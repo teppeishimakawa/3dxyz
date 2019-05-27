@@ -93,7 +93,6 @@ https://opensource.org/licenses/mit-license.php-->
 <input type="text" id="kake" value="1" size="10">
 <br>
 <input type="button" id="conf" value="save_conf" size="10">
-<input type="button" id="default" value="default" size="10">
 </div>
 
 <div id="div2">
@@ -114,6 +113,7 @@ https://opensource.org/licenses/mit-license.php-->
 <br>
 <input type="button" id="live" value="live" size="10">
 <input type="file" id="fileid">
+<br>
 <br>
 <label for="camRotX">camRot(X,Y,Z):</label>
 <input type="text" id="camRotX" value="" size="10">
@@ -154,6 +154,8 @@ https://opensource.org/licenses/mit-license.php-->
 <input type="range" id="fov" value="60" min="1" max="200" step="1"
   oninput="document.getElementById('outputFov').value=this.value">
   <output id="outputFov">60</output>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<input type="button" id="default" value="default" size="10">
 
 
 <!--input type="checkbox" id="check"-->
@@ -669,12 +671,18 @@ document.getElementById("conf").addEventListener('click', function(ev)
 document.getElementById("default").addEventListener('click', function(ev)
    {
   document.getElementById("kake").value=1;
-  document.getElementById("posX").value
-  document.getElementById("output11").value
-
-
-
-
+  document.getElementById("posX").value=0;
+  document.getElementById("output11").value=0;
+  document.getElementById("posY").value=0;
+  document.getElementById("output1").value=0;
+  document.getElementById("posZ").value=0;
+  document.getElementById("output111").value=0;
+  document.getElementById("rotX").value= -25;
+  document.getElementById("output2").value= -25;
+  document.getElementById("rotY").value=0;
+  document.getElementById("output4").value=0;
+  document.getElementById("fov").value=60;
+  document.getElementById("outputFov").value=60;
    });
 
 
