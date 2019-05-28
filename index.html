@@ -2,13 +2,12 @@
 Released under the MIT license
 https://opensource.org/licenses/mit-license.php-->
 
-
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"/>
-  <link rel="stylesheet" href="./style.css"/>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"/>
+<link rel="stylesheet" href="./style.css"/>
       <style>
       #cv
       {
@@ -48,15 +47,16 @@ https://opensource.org/licenses/mit-license.php-->
  <title>3d_xyz</title>
 </head>
 
-
 <body>
 <!--script src="./js/TrackballControls.js"></script-->
-<div id="cv" onmousemove="mouse(event)"></div>
+
+<!--three.jsのレイヤー-->
+<div id="cv" onmousemove="mouse(event)" ></div>
 <video id="myVideo" preload autoplay muted style="visibility:hidden"></video >
 <!--visibility:hidden-->
 
+<!--左ボタン群のレイヤー-->
 <div id="div1">
-
 <label for="txt1">point1(a)_x:</label>
 <input type="text" id="txt1" size="10">
 <label for="txt100">_y:</label>
@@ -93,8 +93,15 @@ https://opensource.org/licenses/mit-license.php-->
 <input type="text" id="kake" value="1" size="10">
 <br>
 <input type="button" id="conf" value="save_conf" size="10">
+<br>
+<input type="text" id="analyz_p1x" value="" size="10">
+<input type="text" id="analyz_p1y" value="" size="10">
+<br>
+<input type="text" id="analyz_p2x" value="" size="10">
+<input type="text" id="analyz_p2y" value="" size="10">
 </div>
 
+<!--右ボタン群のレイヤー-->
 <div id="div2">
 <input type="button" id="stt" value="REC_start" size="10">
 <input type="button" id="stop" value="REC_stop" size="10">
@@ -108,8 +115,7 @@ https://opensource.org/licenses/mit-license.php-->
 <label">time:</label>
 <input type="range" id="time" value="0" min="0" max="1" step="0.01"
   oninput="document.getElementById('output3').value=this.value">
-  <output id="output3"></output>
-
+<output id="output3"></output>
 <br>
 <input type="button" id="live" value="live" size="10">
 <input type="file" id="fileid">
@@ -126,6 +132,7 @@ https://opensource.org/licenses/mit-license.php-->
 <input type="text" id="camPosZ" value="" size="10">
 <br>
 <label">PlanePosX:</label>
+<!--oninputはtextやrangeに入力があった場合に発火。-->
 <input type="range" id="posX" value="0" min="-1000" max="1000" step="1"
   oninput="document.getElementById('output11').value=this.value">
   <output id="output11">0</output>
@@ -157,9 +164,7 @@ https://opensource.org/licenses/mit-license.php-->
 &nbsp;&nbsp;&nbsp;&nbsp;
 <input type="button" id="default" value="default" size="10">
 
-
 <!--input type="checkbox" id="check"-->
-
 </div>
 <script>
 
@@ -205,8 +210,6 @@ var flg=0;
 var video;
 
 
-
-
 init();
 animate();
 
@@ -214,29 +217,27 @@ animate();
  document.getElementById("fileid").onchange=function(evt)
  {
  video.srcObject = null;
+ //file pbjを取り出し。複数ファイル取得可能。形式は配列。
+ var file = evt.target.files;
+ //file reader作成
+ var reader = new FileReader();
+ reader.readAsDataURL(file[0]);
+ reader.onload = function()
+   {
+    video.src=reader.result;
+   }
+  //同じファイルを連続で選択しても成立するよう、最後にファイル名空欄にする処理を追加
+  document.getElementById("fileid").value = '';
+  }
 
-    var file = evt.target.files;
-    var reader = new FileReader();
-    reader.readAsDataURL(file[0]);
-    reader.onload = function()
-    {
-        dataUrl = reader.result;
-        //console.log(dataUrl);
-        video.src=dataUrl;
 
-    }
-    document.getElementById("fileid").value = '';
- }
-
-
-  function init()
+ function init()
 {
-
-//localStorage
+//localStorageの内容を呼び出し
 document.getElementById("kake").value=localStorage.getItem("num1");
 
-document.getElementById("posX").value=localStorage.getItem("num2");
-document.getElementById("output11").value=localStorage.getItem("num200");
+document.getElementById("posX").value=localStorage.getItem("num2");　//range bar
+document.getElementById("output11").value=localStorage.getItem("num200");//text
 
 document.getElementById("posY").value=localStorage.getItem("num3");
 document.getElementById("output1").value=localStorage.getItem("num300");
@@ -253,28 +254,25 @@ document.getElementById("output4").value=localStorage.getItem("num600");
 document.getElementById("fov").value=localStorage.getItem("num7");
 document.getElementById("outputFov").value=localStorage.getItem("num700");
 
-
-fov=document.getElementById("fov").value;
+  fov=document.getElementById("fov").value;
 
   scene = new THREE.Scene();
-  camera = new THREE.PerspectiveCamera( fov, aspect, near, far );
+  camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
 
   camera.position.set( 0, 10, 30);
   //camera.lookAt(new THREE.Vector3(0, 0, 0));
-
 
   canvas = document.getElementById("cv");
       renderer = new THREE.WebGLRenderer({ antialias: true,alpha: true });
       renderer.setPixelRatio(window.devicePixelRatio);
       renderer.setSize(canvas.clientWidth, canvas.clientHeight);
-      renderer.setClearColor(0x000000, 0); // レンダラーの背景色を黒色（不透過）に設定
+      renderer.setClearColor(0x000000, 0); // レンダラーの背景色を黒色,透明に設定
   canvas.appendChild(renderer.domElement); // div領域にcgレンダラーを配置
+
 
   directionalLight = new THREE.DirectionalLight( 0xffffff );
   directionalLight.position.set( 0, 0.7, 0.7 );
   scene.add( directionalLight );
-
-
 
 
   gridHelper = new THREE.GridHelper(1000, 100,0x444444,0xaaaaaa);
@@ -285,39 +283,38 @@ fov=document.getElementById("fov").value;
   //controls = new THREE.TrackballControls(camera,canvas);
 
 
-
-
-
-
-
 // width:100, height:100, widthSegments:1, heightSegments:1
-   plane =  new THREE.Mesh(new THREE.PlaneGeometry(1000, 1000, 10,1),
-              new THREE.MeshLambertMaterial(
+// gridだけだとraycastがgrid線しか当たらなかったので、透明planeを作成
+  plane =  new THREE.Mesh(new THREE.PlaneGeometry(1000, 1000, 10,1),
+           new THREE.MeshLambertMaterial(
                 {
                 color: 0x000000,
                 wireframe: false,
                 opacity:0.0
                 }));
+
   scene.add(plane);
   plane.rotation.set(Math.PI*3/2,0,0);
 
+  //外周のフレーム
   geometry = new THREE.CubeGeometry( 1000, 10, 1000 );
   var geo = new THREE.EdgesGeometry( geometry ); // or WireframeGeometry( geometry )
   var mat = new THREE.LineBasicMaterial( { color: 0xff44ff, linewidth: 2 } );
-
   wireframe = new THREE.LineSegments( geo, mat );
 
   scene.add( wireframe );
 
 
   video=document.getElementById("myVideo");
-  var media=navigator.mediaDevices.getUserMedia(
-  {
+  var media=navigator.mediaDevices.getUserMedia
+  ({
   audio: false,
-  video: {
-  	aspectRatio: {exact: 1.7777777778}
+  video:
+  {
+  //明示的にアスペクト比指定しないとfacetimeHDcamは正方形になるから。
+  //aspectRatio: {exact: 1.7777777778},
+  width: 1280,height:720
   }
-
   });
 
   media.then(function(stream)
@@ -325,15 +322,14 @@ fov=document.getElementById("fov").value;
   video.srcObject = stream;
 
   //recorder
-
-  recorder = new MediaRecorder(stream,{
+  recorder = new MediaRecorder(stream,
+  {
   videoBitsPerSecond : 512000, // 512kbits / sec
   mimeType : 'video/webm; codecs=vp9'
   }) // 映像の入力ソースをユーザーのデバイスから取得
   console.log(recorder);
-    recorder.ondataavailable = function (e)//rec終了のタイミングで呼び出される
+  recorder.ondataavailable = function (e)//rec終了のタイミングで呼び出される
     {
-
       video.srcObject = null;
 
       video.setAttribute('controls', '')
@@ -357,7 +353,8 @@ fov=document.getElementById("fov").value;
       var day = new Date();
       a.download = day + '.webm'
       a.click()
-      window.URL.revokeObjectURL(outputdata )
+      //createされた、objUrlを解放
+      window.URL.revokeObjectURL(outputdata)
      })
 
     }
@@ -366,10 +363,8 @@ fov=document.getElementById("fov").value;
       {
       video.srcObject = stream;
       })
-
 //mediastreamの括弧
   })
-
 
 //deviceId取得
   navigator.mediaDevices.enumerateDevices()
@@ -385,20 +380,15 @@ fov=document.getElementById("fov").value;
  {
   console.log(err.name + ": " + error.message);
  });
-
 //initの括弧
 }
 
 
-
-
  function animate()
     {
-
         renderer.render( scene, camera );
         requestAnimationFrame(animate);
         //controls.update();
-
 
         document.getElementById("camRotX").value=camera.rotation.x.toFixed(2);
         document.getElementById("camRotY").value=camera.rotation.y.toFixed(2);
@@ -443,9 +433,10 @@ fov=document.getElementById("fov").value;
   //console.log(a);
 
   camera.lookAt(new THREE.Vector3(0,0,0));
-
-//animateの括弧
+  //animateの括弧
     }
+
+
 
 
 function mouse(event)
@@ -454,55 +445,56 @@ function mouse(event)
 objects = [];
 
 if(flg==1){
+//生成されたplane
 objects.push(planeMesh);
 }else
 {
+//床面
 objects.push(plane);
 }
-
-
+//event.target はイベントが発生した要素
+//event.currentTarget はイベントリスナをセットした要素を指す。
+//このケースではonmousemoveがついているcv div。
     var element = event.currentTarget;
 
     // スクリーン上のマウス位置を取得する
     //currentTargetとoffset,elementじゃないとレイずれる
     var mouseX = event.clientX - element.offsetLeft;
     var mouseY = event.clientY - element.offsetTop;
+    // offsetは「width」「padding」「border」を足したピクセル単位の数値
     var w = element.offsetWidth;
     var h = element.offsetHeight;
+    //console.log(mouseX);
+    //console.log(mouseY);
 
     // 取得したスクリーン座標を-1〜1に正規化する（WebGLは-1〜1で座標が表現される）
     ms.x =  (mouseX/w)  * 2 - 1;
     ms.y = -(mouseY/h) * 2 + 1;
-// レイキャスト = マウス位置からまっすぐに伸びる光線ベクトルを生成
+
+    // レイキャスト = マウス位置からまっすぐに伸びる光線ベクトルを生成
+    //msは2Dベクトル
     raycaster.setFromCamera( ms, camera );
-
-
 
 intersects = raycaster.intersectObjects(objects, false);
 
 if ( intersects.length > 0 )
 {
-    //console.log( intersects[ 0 ].point.x);
-    //console.log( intersects[ 0 ].point.z);
-
+ //console.log( intersects[ 0 ].point.x);
+ //console.log( intersects[ 0 ].point.z);
 };
-
-
-
 //mouse(event)の括弧
 };
-
 
 document.onkeydown = pageMove;
 function pageMove()
 {
-  if (event.keyCode == 65)  //「a」が押されたか確認
+  if (event.keyCode == 65)  //「a」が押されたかor解析p1ありか確認
   {
     document.getElementById("txt1").value=intersects[0].point.x.toFixed(2);
     document.getElementById("txt100").value=intersects[0].point.y.toFixed(2);
     document.getElementById("txt2").value=intersects[0].point.z.toFixed(2);
   }
-  if (event.keyCode == 90)  //「z」が押されたか確認
+  if (event.keyCode == 90)  //「z」が押されたかor解析p2ありか確認
   {
   	kake_value=document.getElementById("kake").value
   	document.getElementById("txt3").value=intersects[0].point.x.toFixed(2);
@@ -515,10 +507,7 @@ function pageMove()
     p2y=document.getElementById("txt101").value;
     p2z=document.getElementById("txt4").value;
     document.getElementById("txt5").value=Math.sqrt(Math.pow((p2x-p1x),2)+Math.pow((p2z-p1z),2)).toFixed(2)*kake_value;
-
-
   }
-
     if (event.keyCode == 88)  //「x」が押されたか確認
   {
   	kake_value=document.getElementById("kake").value
@@ -529,6 +518,8 @@ function pageMove()
     p3y=document.getElementById("txt11").value;
     p3z=document.getElementById("txt12").value;
 
+
+　// y=ax^2 + bx +cの3点を通る2次関数
 　var a;
   var b;
   var c;
@@ -543,6 +534,7 @@ function pageMove()
   x3=p3x;
   y3=p3y;
   z3=p3z;
+   //x^2 - y^2=(x+y)(x-y)を使い、以下の3式になる。その際+があると文字列混ざってNaNになるのでparseFloat
 
    //a = ((y1 - y2) * (x1 - x3) - (y1 - y3) * (x1 - x2)) / ((x1 - x2) * (x1 - x3) * (x2 - x3));
    //b = (y1 - y2) / (x1 - x2) - a * (x1 + x2);
@@ -551,23 +543,114 @@ function pageMove()
    b = (y1-y2)/(x1-x2)-a*(parseFloat(x1) + parseFloat(x2));
 　 c = y1-a*x1*x1-b*x1;
 
-  //p1y引くのは平面マイナス値にした場合のための措置
+  //2次関数の頂点を求める公式。p1y引くのは平面のy値を0以外にした場合のための措置。
 　 document.getElementById("txt13").value= ((parseFloat(-b*b) + parseFloat(4*a*c))/(4*a)-p1y)*kake_value;
-
   }
+  //pagemoveの括弧
+ }
+
+
+/////////////////////////////////
+//p1 analyzあり
+document.getElementById("analyz_p1y").onchange=function ana1()
+{
+objects = [];
+//床面
+objects.push(plane);
+
+    // 取得したスクリーン座標を-1〜1に正規化する（WebGLは-1〜1で座標が表現される）
+    ms.x =  (document.getElementById("analyz_p1x").value/width)  * 2 - 1;
+    ms.y = -(document.getElementById("analyz_p1y").value/height) * 2 + 1;
+
+    // レイキャスト = マウス位置からまっすぐに伸びる光線ベクトルを生成
+    //msは2Dベクトル
+    raycaster.setFromCamera( ms, camera );
+
+intersects = raycaster.intersectObjects(objects, false);
+
+if ( intersects.length > 0 )
+{
+ //console.log( intersects[ 0 ].point.x);
+ //console.log( intersects[ 0 ].point.z);
+};
+    document.getElementById("txt1").value=intersects[0].point.x.toFixed(2);
+    document.getElementById("txt100").value=intersects[0].point.y.toFixed(2);
+    document.getElementById("txt2").value=intersects[0].point.z.toFixed(2);
+}
+
+//p2 analyzあり
+document.getElementById("analyz_p2y").onchange=function ana2()
+{
+objects = [];
+//床面
+objects.push(plane);
+
+    // 取得したスクリーン座標を-1〜1に正規化する（WebGLは-1〜1で座標が表現される）
+    ms.x =  (document.getElementById("analyz_p2x").value/width)  * 2 - 1;
+    ms.y = -(document.getElementById("analyz_p2y").value/height) * 2 + 1;
+
+    // レイキャスト = マウス位置からまっすぐに伸びる光線ベクトルを生成
+    //msは2Dベクトル
+    raycaster.setFromCamera( ms, camera );
+
+intersects = raycaster.intersectObjects(objects, false);
+
+if ( intersects.length > 0 )
+{
+ //console.log( intersects[ 0 ].point.x);
+ //console.log( intersects[ 0 ].point.z);
+};
+  	kake_value=document.getElementById("kake").value
+  	document.getElementById("txt3").value=intersects[0].point.x.toFixed(2);
+  	document.getElementById("txt101").value=intersects[0].point.y.toFixed(2);
+    document.getElementById("txt4").value=intersects[0].point.z.toFixed(2);
+    p1x=document.getElementById("txt1").value;
+    p1y=document.getElementById("txt100").value;
+    p1z=document.getElementById("txt2").value;
+    p2x=document.getElementById("txt3").value;
+    p2y=document.getElementById("txt101").value;
+    p2z=document.getElementById("txt4").value;
+    document.getElementById("txt5").value=Math.sqrt(Math.pow((p2x-p1x),2)+Math.pow((p2z-p1z),2)).toFixed(2)*kake_value;
+
+//ファイル送信
+var json_obj=
+ {
+ distance : document.getElementById("txt5").value
+ }
+
+ var json=JSON.stringify(json_obj);
+
+
+/*
+var uri = encodeURI("https://www.google.com?" + json);
+var ajax = new XMLHttpRequest();
+ajax.open("get", uri);
+ajax.send();
+
+var dec=decodeURI(uri);
+console.log(dec);
+var json_origin=JSON.parse(dec);
+
+console.log(dec);
+console.log(json_origin);
+*/
+
+//p2analyzの括弧
+}
+/////////////////////////////////
+
+
 
 
   document.getElementById("btn1").onclick=function mkPlane()
   {
-
+  //plane生成されたらflg=1にして、raycast受けるように。その際床はraycast非対称に。
   flg=1;
-
 　planeGeo = new THREE.Geometry();
-
-  planeGeo.vertices.push(new THREE.Vector3(p1x, p1y, p1z));
-  planeGeo.vertices.push(new THREE.Vector3(p2x, p2y, p2z));
-  planeGeo.vertices.push(new THREE.Vector3(p1x, parseInt(p1y) + 80, p1z));
-  planeGeo.vertices.push(new THREE.Vector3(p2x, parseInt(p2y) + 80, p2z));
+  planeGeo.vertices.push(new THREE.Vector3(p1x, p1y, p1z)); //point0
+  planeGeo.vertices.push(new THREE.Vector3(p2x, p2y, p2z)); //point1
+  planeGeo.vertices.push(new THREE.Vector3(p1x, parseFloat(p1y) + 100, p1z)); //point2
+  planeGeo.vertices.push(new THREE.Vector3(p2x, parseFloat(p2y) + 100, p2z)); //point3
 
   planeGeo.faces.push(new THREE.Face3( 0, 1, 2));
   planeGeo.faces.push(new THREE.Face3( 3, 2, 1));
@@ -580,6 +663,7 @@ function pageMove()
                 wireframe: true,
                 opacity:1
                 });
+  //両面から見られて、raycastできるように
   planeMat.side=THREE.DoubleSide;
   planeMesh = new THREE.Mesh(planeGeo,planeMat);
   scene.add(planeMesh);
@@ -590,7 +674,6 @@ function pageMove()
   {
   flg=0;
   scene.remove(planeMesh);
-
     p1x=document.getElementById("txt1").value=0;
     p1y=document.getElementById("txt100").value=0;
     p1z=document.getElementById("txt2").value=0;
@@ -603,8 +686,7 @@ function pageMove()
     p3z=document.getElementById("txt12").value=0;
     document.getElementById("txt13").value=0;
   }
-//pagemoveの括弧
-}
+
 
 //recorder
   document.getElementById("stt").addEventListener('click', function(ev){
@@ -630,11 +712,11 @@ function pageMove()
     document.getElementById('time').value=video.currentTime/video.duration;
   })
   document.getElementById("koma").addEventListener('click', function(ev) {
-  video.currentTime += 1/60;
+  video.currentTime += 1/30;
   document.getElementById('time').value=video.currentTime/video.duration;
   })
   document.getElementById("komaback").addEventListener('click', function(ev) {
-  video.currentTime -= 1/60;
+  video.currentTime -= 1/30;
   document.getElementById('time').value=video.currentTime/video.duration;
   })
   document.getElementById("time").addEventListener('click', function(ev) {
@@ -684,6 +766,28 @@ document.getElementById("default").addEventListener('click', function(ev)
   document.getElementById("fov").value=60;
   document.getElementById("outputFov").value=60;
    });
+
+
+/*
+    function ExecUpload() {
+      var upload1 = document.getElementById("upload1");
+
+      var file1 = upload1.files[0];
+      var formdata = new FormData();
+      formdata.append("file", file1);
+
+      var xmlhttp = new XMLHttpRequest();
+      xmlhttp.onreadystatechange = function ()
+      {
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200)
+        {
+          alert(xmlhttp.responseText);
+        }
+      };
+      xmlhttp.open("POST", "GetForm04.ashx", true);
+      xmlhttp.send(formdata);
+    }
+*/
 
 
 
