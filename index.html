@@ -15,6 +15,22 @@ https://opensource.org/licenses/mit-license.php-->
         position:fixed;
         width: 1280px;
         height: 720px;
+        z-index:5;
+      }
+      #canvas2
+      {
+        left:0px;
+        position:fixed;
+        width: 1280px;
+        height: 720px;
+        z-index:3;
+      }
+      #video2
+      {
+        left:0px;
+        position:fixed;
+        width: 1280px;
+        height: 720px;
         z-index:2;
       }
       #myVideo
@@ -25,21 +41,29 @@ https://opensource.org/licenses/mit-license.php-->
         height: 720px;
         z-index:1;
       }
+
       #div1
       {
         position:fixed;
         top:10px;
         left:10px;
-        z-index:3;
         font-size:8px;
+        z-index:8;
       }
       #div2
       {
         position:fixed;
         top:10px;
         right:10px;
-        z-index:3;
         font-size:8px;
+         z-index:8;
+      }
+     #col_dis
+      {
+        left:10px;
+        bottom:10px;
+        position:fixed;
+        z-index:8;
       }
     </style>
  <script src="./js/three.min.js" ></script>
@@ -49,12 +73,25 @@ https://opensource.org/licenses/mit-license.php-->
 
 <body>
 <!--script src="./js/TrackballControls.js"></script-->
+    <div id="col_dis">
+        <input id="color" type="color" value="#00ff00" />
+        <input id="distance" type="number" value="200" />
+    </div>
+        <div id="bg">
+        <video id="video2" autoplay></video>
+        <canvas id="canvas2" width="1280" height="720"></canvas>
+    </div>
 
 <!--three.jsのレイヤー-->
 <div id="cv"></div>
 <!--onclick="mouse(event)"-->
-<video id="myVideo" preload autoplay muted style="visibility:hidden"></video >
+<video id="myVideo" preload autoplay muted style="display:none"></video >
 <!--visibility:hidden-->
+
+
+
+    <script type="text/javascript" src="./chromatest.js"></script>
+
 
 <!--左ボタン群のレイヤー-->
 <div id="div1">
@@ -110,7 +147,11 @@ https://opensource.org/licenses/mit-license.php-->
 <input type="button" id="inputxy2" size="10" value="input_xy_data2">
 <br>
 <input type="button" id="sendbtn" size="10" value="websocket">
+
 </div>
+
+
+
 
 <!--右ボタン群のレイヤー-->
 <div id="div2">
