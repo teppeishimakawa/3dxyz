@@ -51,7 +51,8 @@ https://opensource.org/licenses/mit-license.php-->
 <!--script src="./js/TrackballControls.js"></script-->
 
 <!--three.jsのレイヤー-->
-<div id="cv" onmousemove="mouse(event)" ></div>
+<div id="cv"></div>
+<!--onclick="mouse(event)"-->
 <video id="myVideo" preload autoplay muted style="visibility:hidden"></video >
 <!--visibility:hidden-->
 
@@ -98,12 +99,16 @@ https://opensource.org/licenses/mit-license.php-->
 <input type="text" id="kake" value="1" size="10" class="kake">
 <br>
 <input type="button" id="conf" value="save_conf" size="10">
+<div id="analyz_p1x" size="10"></div>
+<div id="analyz_p1y" size="10"></div>
 <br>
-<input type="text" id="analyz_p1x" value="" size="10">
-<input type="text" id="analyz_p1y" value="" size="10">
+<div id="analyz_p2x" size="10"></div>
+<div id="analyz_p2y" size="10"></div>
+
 <br>
-<input type="text" id="analyz_p2x" value="" size="10">
-<input type="text" id="analyz_p2y" value="" size="10">
+<input type="button" id="inputxy" size="10" value="input_xy_data">
+<input type="button" id="inputxy2" size="10" value="input_xy_data2">
+<br>
 <input type="button" id="sendbtn" size="10" value="websocket">
 </div>
 
@@ -283,9 +288,9 @@ document.getElementById("outputFov").value=localStorage.getItem("num700");
   scene.add( directionalLight );
 
 
-  gridHelper = new THREE.GridHelper(1000, 100,0x444444,0xaaaaaa);
+  gridHelper = new THREE.GridHelper(1000, 10,0x444444,0xaaaaaa);
   scene.add(gridHelper);
-  axesHelper = new THREE.AxesHelper(1000);
+  axesHelper = new THREE.AxesHelper(100);
   scene.add(axesHelper);
   //controls = new THREE.OrbitControls(camera,canvas);
   //controls = new THREE.TrackballControls(camera,canvas);
@@ -293,12 +298,13 @@ document.getElementById("outputFov").value=localStorage.getItem("num700");
 
 // width:100, height:100, widthSegments:1, heightSegments:1
 // gridだけだとraycastがgrid線しか当たらなかったので、透明planeを作成
-  var yuka_geo=new THREE.PlaneGeometry(1000, 1000, 10,1);
+  var yuka_geo=new THREE.PlaneGeometry(1000, 1000, 1,1);
+  //THREE.PlaneGeometry(1000, 1000, 10,1);
   var yuka_mat=new THREE.MeshLambertMaterial(
                 {
                 color: 0x000000,
                 wireframe: false,
-                opacity:0
+                opacity:0.2
                 });
   yuka_mat.side=THREE.DoubleSide;
   plane =  new THREE.Mesh(yuka_geo,yuka_mat);
@@ -318,7 +324,7 @@ document.getElementById("outputFov").value=localStorage.getItem("num700");
   plane.rotation.set(Math.PI*3/2,0,0);
 
   //外周のフレーム
-  geometry = new THREE.CubeGeometry( 1000, 10, 1000 );
+  geometry = new THREE.CubeGeometry( 1000, 200, 1000 );
   var geo = new THREE.EdgesGeometry( geometry ); // or WireframeGeometry( geometry )
   var mat = new THREE.LineBasicMaterial( { color: 0xff44ff, linewidth: 2 } );
   wireframe = new THREE.LineSegments( geo, mat );
@@ -460,7 +466,7 @@ document.getElementById("outputFov").value=localStorage.getItem("num700");
 
 
 
-function mouse(event)
+document.getElementById("cv").addEventListener('click',function(event)
 {
 
 objects = [];
@@ -504,7 +510,10 @@ if ( intersects.length > 0 )
  //console.log( intersects[ 0 ].point.z);
 };
 //mouse(event)の括弧
-};
+});
+
+
+
 
 document.onkeydown = pageMove;
 function pageMove()
@@ -578,17 +587,20 @@ function pageMove()
  }
 
 
+
+
 /////////////////////////////////
 //p1 analyzあり
-document.getElementById("analyz_p1y").onchange=function ana1()
+//document.getElementById("analyz_p1y").oninput=
+function ana1()
 {
 objects = [];
 //床面
 objects.push(plane);
 
     // 取得したスクリーン座標を-1〜1に正規化する（WebGLは-1〜1で座標が表現される）
-    ms.x =  (document.getElementById("analyz_p1x").value/width)  * 2 - 1;
-    ms.y = -(document.getElementById("analyz_p1y").value/height) * 2 + 1;
+    ms.x =  parseFloat(document.getElementById("analyz_p1x").innerHTML/width)  * 2 - 1;
+    ms.y = -parseFloat(document.getElementById("analyz_p1y").innerHTML/height) * 2 + 1;
 
     // レイキャスト = マウス位置からまっすぐに伸びる光線ベクトルを生成
     //msは2Dベクトル
@@ -607,15 +619,15 @@ if ( intersects.length > 0 )
 }
 
 //p2 analyzあり
-document.getElementById("analyz_p2y").onchange=function ana2()
+function ana2()
 {
 objects = [];
 //床面
 objects.push(plane);
 
     // 取得したスクリーン座標を-1〜1に正規化する（WebGLは-1〜1で座標が表現される）
-    ms.x =  (document.getElementById("analyz_p2x").value/width)  * 2 - 1;
-    ms.y = -(document.getElementById("analyz_p2y").value/height) * 2 + 1;
+    ms.x =  (document.getElementById("analyz_p2x").innerHTML/width)  * 2 - 1;
+    ms.y = -(document.getElementById("analyz_p2y").innerHTML/height) * 2 + 1;
 
     // レイキャスト = マウス位置からまっすぐに伸びる光線ベクトルを生成
     //msは2Dベクトル
@@ -671,8 +683,8 @@ console.log(json_origin);
 　planeGeo = new THREE.Geometry();
   planeGeo.vertices.push(new THREE.Vector3(p1x, p1y, p1z)); //point0
   planeGeo.vertices.push(new THREE.Vector3(p2x, p2y, p2z)); //point1
-  planeGeo.vertices.push(new THREE.Vector3(p1x, parseFloat(p1y) + 100, p1z)); //point2
-  planeGeo.vertices.push(new THREE.Vector3(p2x, parseFloat(p2y) + 100, p2z)); //point3
+  planeGeo.vertices.push(new THREE.Vector3(p1x, parseFloat(p1y) + 200, p1z)); //point2
+  planeGeo.vertices.push(new THREE.Vector3(p2x, parseFloat(p2y) + 200, p2z)); //point3
 
   planeGeo.faces.push(new THREE.Face3( 0, 1, 2));
   planeGeo.faces.push(new THREE.Face3( 3, 2, 1));
@@ -788,6 +800,49 @@ document.getElementById("default").addEventListener('click', function(ev)
   document.getElementById("fov").value=60;
   document.getElementById("outputFov").value=60;
    });
+
+
+//input_xy_data
+document.getElementById("inputxy").addEventListener('click', function(ev)
+   {
+    document.getElementById("analyz_p1x").innerHTML=500;
+    document.getElementById("analyz_p1y").innerHTML=400;
+    document.getElementById("analyz_p2x").innerHTML=550;
+    document.getElementById("analyz_p2y").innerHTML=450;
+});
+
+document.getElementById("inputxy2").addEventListener('click', function(ev)
+   {
+    document.getElementById("analyz_p1x").innerHTML=500;
+    document.getElementById("analyz_p1y").innerHTML=390;
+    document.getElementById("analyz_p2x").innerHTML=550;
+    document.getElementById("analyz_p2y").innerHTML=440;
+});
+
+
+
+/** 監視対象の要素オブジェクト */
+const elem = document.getElementById("analyz_p1y");
+const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+        console.log(mutation.target);
+        ana1();
+        ana2();
+    });
+});
+
+/** 監視時のオプション */
+const config = {
+  attributes: true,
+  childList: true,
+  characterData: true,
+  attributeOldValue: true,
+  characterDataOldValue: true
+};
+
+/** 要素の変化監視をスタート */
+observer.observe(elem, config);
+
 
 /*
 //ajax
