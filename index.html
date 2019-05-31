@@ -72,13 +72,18 @@ https://opensource.org/licenses/mit-license.php-->
 <input type="text" id="txt4" size="10">
 <br>
 <label for="txt5">distance:&nbsp;&nbsp;&nbsp;&nbsp;</label>
-<input type="text" id="txt5" size="10">
+<input type="text" id="txt5" class="txt55" size="10">
 &nbsp;&nbsp;&nbsp;&nbsp;
 <input type="button" id="btn1" value="plane_on" size="10">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 <input type="button" id="btn2" value="plane_off" size="10">
+&nbsp;&nbsp;
+<!--前のdistance-->
+<input type="text" id="txt50" size="7" >
+<!--今のdistanceコピー-->
+<!--input type="text" id="txt60" class="txt60c" name="txt60n" size="7" value="ccc"-->
 <br>
-<label for="txt10">point3(x)_x:</label>
+<label for="txt10" >point3(x)_x:</label>
 <input type="text" id="txt10" size="10">
 <label for="txt10">_y:</label>
 <input type="text" id="txt11" size="10">
@@ -90,7 +95,7 @@ https://opensource.org/licenses/mit-license.php-->
 <input type="text" id="txt13" size="10">
 <br>
 <label for="txt6">multi_para:</label>
-<input type="text" id="kake" value="1" size="10">
+<input type="text" id="kake" value="1" size="10" class="kake">
 <br>
 <input type="button" id="conf" value="save_conf" size="10">
 <br>
@@ -99,6 +104,7 @@ https://opensource.org/licenses/mit-license.php-->
 <br>
 <input type="text" id="analyz_p2x" value="" size="10">
 <input type="text" id="analyz_p2y" value="" size="10">
+<input type="button" id="sendbtn" size="10" value="websocket">
 </div>
 
 <!--右ボタン群のレイヤー-->
@@ -256,6 +262,8 @@ document.getElementById("outputFov").value=localStorage.getItem("num700");
 
   fov=document.getElementById("fov").value;
 
+  //document.getElementById("txt60").innerHTML=localStorage.getItem("num1001");
+
   scene = new THREE.Scene();
   camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
 
@@ -285,13 +293,26 @@ document.getElementById("outputFov").value=localStorage.getItem("num700");
 
 // width:100, height:100, widthSegments:1, heightSegments:1
 // gridだけだとraycastがgrid線しか当たらなかったので、透明planeを作成
+  var yuka_geo=new THREE.PlaneGeometry(1000, 1000, 10,1);
+  var yuka_mat=new THREE.MeshLambertMaterial(
+                {
+                color: 0x000000,
+                wireframe: false,
+                opacity:0
+                });
+  yuka_mat.side=THREE.DoubleSide;
+  plane =  new THREE.Mesh(yuka_geo,yuka_mat);
+
+/*
   plane =  new THREE.Mesh(new THREE.PlaneGeometry(1000, 1000, 10,1),
            new THREE.MeshLambertMaterial(
                 {
                 color: 0x000000,
                 wireframe: false,
-                opacity:0.0
+                opacity:0
                 }));
+*/
+
 
   scene.add(plane);
   plane.rotation.set(Math.PI*3/2,0,0);
@@ -496,9 +517,9 @@ function pageMove()
   }
   if (event.keyCode == 90)  //「z」が押されたかor解析p2ありか確認
   {
-  	kake_value=document.getElementById("kake").value
-  	document.getElementById("txt3").value=intersects[0].point.x.toFixed(2);
-  	document.getElementById("txt101").value=intersects[0].point.y.toFixed(2);
+    kake_value=document.getElementById("kake").value
+    document.getElementById("txt3").value=intersects[0].point.x.toFixed(2);
+    document.getElementById("txt101").value=intersects[0].point.y.toFixed(2);
     document.getElementById("txt4").value=intersects[0].point.z.toFixed(2);
     p1x=document.getElementById("txt1").value;
     p1y=document.getElementById("txt100").value;
@@ -506,11 +527,18 @@ function pageMove()
     p2x=document.getElementById("txt3").value;
     p2y=document.getElementById("txt101").value;
     p2z=document.getElementById("txt4").value;
+    //z押すと今まで値をlocal storageに保存
+    localStorage.setItem("num1000",document.getElementById("txt5").value);
+    //計算値を現在のフィールドに
     document.getElementById("txt5").value=Math.sqrt(Math.pow((p2x-p1x),2)+Math.pow((p2z-p1z),2)).toFixed(2)*kake_value;
+    //localStorageの値を前フィールドに入力
+    document.getElementById("txt50").value=localStorage.getItem("num1000");
+    //今のdistanceをコピー
+　　localStorage.setItem("num1001",document.getElementById("txt5").value);
   }
     if (event.keyCode == 88)  //「x」が押されたか確認
   {
-  	kake_value=document.getElementById("kake").value
+    kake_value=document.getElementById("kake").value
     document.getElementById("txt10").value=intersects[0].point.x.toFixed(2);
     document.getElementById("txt11").value=intersects[0].point.y.toFixed(2);
     document.getElementById("txt12").value=intersects[0].point.z.toFixed(2);
@@ -600,9 +628,9 @@ if ( intersects.length > 0 )
  //console.log( intersects[ 0 ].point.x);
  //console.log( intersects[ 0 ].point.z);
 };
-  	kake_value=document.getElementById("kake").value
-  	document.getElementById("txt3").value=intersects[0].point.x.toFixed(2);
-  	document.getElementById("txt101").value=intersects[0].point.y.toFixed(2);
+    kake_value=document.getElementById("kake").value
+    document.getElementById("txt3").value=intersects[0].point.x.toFixed(2);
+    document.getElementById("txt101").value=intersects[0].point.y.toFixed(2);
     document.getElementById("txt4").value=intersects[0].point.z.toFixed(2);
     p1x=document.getElementById("txt1").value;
     p1y=document.getElementById("txt100").value;
@@ -613,15 +641,12 @@ if ( intersects.length > 0 )
     document.getElementById("txt5").value=Math.sqrt(Math.pow((p2x-p1x),2)+Math.pow((p2z-p1z),2)).toFixed(2)*kake_value;
 
 //ファイル送信
+/*
 var json_obj=
  {
  distance : document.getElementById("txt5").value
  }
-
  var json=JSON.stringify(json_obj);
-
-
-/*
 var uri = encodeURI("https://www.google.com?" + json);
 var ajax = new XMLHttpRequest();
 ajax.open("get", uri);
@@ -638,9 +663,6 @@ console.log(json_origin);
 //p2analyzの括弧
 }
 /////////////////////////////////
-
-
-
 
   document.getElementById("btn1").onclick=function mkPlane()
   {
@@ -703,9 +725,9 @@ console.log(json_origin);
   })
 
   document.getElementById("play").addEventListener('click', function(ev) {
-  	video.playbackRate = 1;
-  	video.play();
-  	document.getElementById('time').value = video.currentTime/video.duration;
+    video.playbackRate = 1;
+    video.play();
+    document.getElementById('time').value = video.currentTime/video.duration;
   })
     document.getElementById("pause").addEventListener('click', function(ev) {
     video.pause();
@@ -733,21 +755,21 @@ console.log(json_origin);
 //localstorage保存
 document.getElementById("conf").addEventListener('click', function(ev)
    {
-   	localStorage.setItem("num1",document.getElementById("kake").value);
+    localStorage.setItem("num1",document.getElementById("kake").value);
 
-   	localStorage.setItem("num2",document.getElementById("posX").value);
-   	localStorage.setItem("num200",document.getElementById("output11").value);
-   	localStorage.setItem("num3",document.getElementById("posY").value);
-   	localStorage.setItem("num300",document.getElementById("output1").value);
-   	localStorage.setItem("num4",document.getElementById("posZ").value);
-   	localStorage.setItem("num400",document.getElementById("output111").value);
-   	localStorage.setItem("num5",document.getElementById("rotX").value);
-   	localStorage.setItem("num500",document.getElementById("output2").value);
-   	localStorage.setItem("num6",document.getElementById("rotY").value);
-   	localStorage.setItem("num600",document.getElementById("output4").value);
+    localStorage.setItem("num2",document.getElementById("posX").value);
+    localStorage.setItem("num200",document.getElementById("output11").value);
+    localStorage.setItem("num3",document.getElementById("posY").value);
+    localStorage.setItem("num300",document.getElementById("output1").value);
+    localStorage.setItem("num4",document.getElementById("posZ").value);
+    localStorage.setItem("num400",document.getElementById("output111").value);
+    localStorage.setItem("num5",document.getElementById("rotX").value);
+    localStorage.setItem("num500",document.getElementById("output2").value);
+    localStorage.setItem("num6",document.getElementById("rotY").value);
+    localStorage.setItem("num600",document.getElementById("output4").value);
 
-   	localStorage.setItem("num7",document.getElementById("fov").value);
-   	localStorage.setItem("num700",document.getElementById("outputFov").value);
+    localStorage.setItem("num7",document.getElementById("fov").value);
+    localStorage.setItem("num700",document.getElementById("outputFov").value);
    });
 
 document.getElementById("default").addEventListener('click', function(ev)
@@ -767,6 +789,50 @@ document.getElementById("default").addEventListener('click', function(ev)
   document.getElementById("outputFov").value=60;
    });
 
+/*
+//ajax
+var xhr = new XMLHttpRequest();
+
+xhr.open("GET", 【どのサーバーに？】);
+xhr.send();
+
+
+xhr.onreadystatechange = function()
+{
+//0 準備段階  まだ通信は行われていない状態
+//1 準備完了  通信を行う準備が完了している状態
+//2 通信開始  サーバーと通信が始まっている状態
+//3 受信中 サーバーから目的のデータを取得している状態
+//4 通信完了  データを取得して通信が終了している状態
+//200 成功  特に問題なく通信が成功した状態
+//401 エラー 認証が必要なため通信できない状態
+//403 エラー アクセスが禁止されていて通信できない状態
+//404 エラー 情報が存在しないために通信できない状態
+//500 エラー サーバー側の不具合で通信できない状態
+//503 エラー サーバーに負荷がかかって通信できない状態
+    if ( xhr.readyState === 4 && xhr.status === 200)
+    {
+
+        //データ取得処理を書く
+
+    }
+}
+*/
+
+/*
+//websocket
+var connection = new WebSocket('wss://echo.websocket.org');
+//通信が接続された場合
+//connection.onopen = function(e) { };
+
+document.getElementById("sendbtn").addEventListener('click', function(e) {
+  connection.send(document.getElementById('txt5').value);
+})
+
+connection.onmessage = function(e) {
+    console.log(e.data);
+};
+*/
 
 /*
     function ExecUpload() {
@@ -788,11 +854,10 @@ document.getElementById("default").addEventListener('click', function(ev)
       xmlhttp.send(formdata);
     }
 */
-
-
-
-
 </script>
-
+<!--script type="module">
+//node.js用
+export let dista = document.getElementById("txt5").value;
+</script-->
 </body>
 </html>
