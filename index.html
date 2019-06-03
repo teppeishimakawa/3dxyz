@@ -19,14 +19,13 @@ https://opensource.org/licenses/mit-license.php-->
       }
       #canvas2
       {
-        left:0px;
         position:fixed;
-        width: 1280px;
-        height: 720px;
+
         z-index:3;
       }
       #video2
       {
+
         left:0px;
         position:fixed;
         width: 1280px;
@@ -34,7 +33,7 @@ https://opensource.org/licenses/mit-license.php-->
         z-index:2;
       }
       #myVideo
-      {
+      {　
       	left:0px;
         position:fixed;
         width: 1280px;
@@ -75,11 +74,17 @@ https://opensource.org/licenses/mit-license.php-->
 <!--script src="./js/TrackballControls.js"></script-->
     <div id="col_dis">
         <input id="color" type="color" value="#00ff00" />
-        <input id="distance" type="number" value="200" />
+        <input id="distance" type="number" value="500" style="width:50px;" />
+        <input id="canvas2Wid" type="number" value="100" style="width:50px;"/>
+        <input id="canvas2Hei" type="number" value="100" style="width:50px;"/>
+        <input id="canvas2X" type="number" value="0" style="width:50px;"/>
+        <input id="canvas2Y" type="number" value="0" style="width:50px;"/>
+        <br>
+        <span id="res">result</span>
     </div>
         <div id="bg">
         <video id="video2" autoplay></video>
-        <canvas id="canvas2" width="1280" height="720"></canvas>
+        <canvas id="canvas2" width="100" height="100"></canvas>
     </div>
 
 <!--three.jsのレイヤー-->
