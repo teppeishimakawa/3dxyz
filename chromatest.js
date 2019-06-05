@@ -2,12 +2,18 @@ var finresult=[];
 var finresult2=[];
 var j;
 
+var xx=0;
+var yy=0;
+var widwid=100;
+var heihei=100;
 
 var video2 = document.getElementById('video2');
     // video2は非表示にしておく
     video2.style.display = 'none';
 
     var canvas2 = document.getElementById('canvas2');
+    canvas2.width=1280;
+    canvas2.height=720;
     // そのまま表示すると鏡像にならないので反転させておく
     video2.style.transform = 'rotateY(180deg)';
 
@@ -25,18 +31,32 @@ var video2 = document.getElementById('video2');
         draw();
 
 
-        //draw();
     }, function () {});
 
     // video2の映像をcanvas2に描画する
     var draw = function () {
-        context.drawImage(video2, 0, 0, canvas2.width,canvas2.height,0, 0, canvas2.width, canvas2.height);
+        context.clearRect(0, 0, 1280, 720);
+        //context.drawImage(video2,500,500,100,200,500,500,100,200);
+        context.drawImage(video2,xx,yy,widwid,heihei,xx,yy,widwid,heihei);
         // ここでクロマキー処理をする
         chromaKey();
         requestAnimationFrame(draw);
         if(j== null){return}
         console.log(j);
        document.getElementById("res").innerHTML=j;
+       //透明でないピクセル番号をx,yスクリーン座標に変換
+        /*d
+       k:0から始まるpixel番号、j:透明でないa番号
+       xはk/(canvas2.width + 1)の余り
+       yはk/(canvas2.width + 1)の商
+       3+(k*4)=j (j>=3)
+        */
+        document.getElementById("analyz_p2x").innerHTML=((j-3)/4)%(parseInt(widwid) + 1) + parseInt(xx);
+        console.log(parseInt(((j-3)/4)%(widwid + 1)))
+        console.log(widwid);
+        console.log(xx);
+        //console.log((j-3)/4);
+        document.getElementById("analyz_p2y").innerHTML=parseInt(Math.floor((j-3)/4)/(parseInt(widwid) + 1) + parseInt(yy));
         j=null;
     };
 
@@ -47,7 +67,7 @@ var video2 = document.getElementById('video2');
     // クロマキー処理
     var chromaKey = function ()
     {
-        var imageData = context.getImageData(0, 0, canvas2.width, canvas2.height),
+        var imageData = context.getImageData(xx,yy,widwid,heihei);
             data = imageData.data; //参照渡し
 
         // dataはUint8ClampedArray
@@ -73,6 +93,7 @@ var video2 = document.getElementById('video2');
             else
             {
             finresult.push(i);
+            //jは透明でない最小のpixel番号
             j=finresult.reduce((a,b)=>Math.min(a,b));
             setTimeout(function(){finresult.length=0;},5000);
             }
@@ -86,7 +107,7 @@ var video2 = document.getElementById('video2');
            //finresult.push(i);
            //console.log(finresult.reduce((a,b)=>Math.min(a,b)));
 
-        context.putImageData(imageData, 0, 0);
+        context.putImageData(imageData,xx,yy);
     };
 
     // r,g,bというkeyを持ったobjectが第一引数と第二引数に渡される想定
@@ -116,7 +137,7 @@ var video2 = document.getElementById('video2');
 
 
 
-
+//text要素はcanvas2Wid,canvas2Hei,canvas2X,canvas2Y
 
     var distance = document.getElementById('distance');
     distance.style.textAlign = 'right';
@@ -125,22 +146,12 @@ var video2 = document.getElementById('video2');
     });
 
 //canvasの縦横、位置をUIで変化させる。
-    canvas2Wid.style.textAlign = 'right';
-    canvas2Wid.addEventListener('change', function () {
-        document.getElementById("canvas2").width = this.value;
+
+
+    document.getElementById("mask").addEventListener('click', function () {
+        xx=document.getElementById("canvas2X").value;
+        yy=document.getElementById("canvas2Y").value;
+        widwid=document.getElementById("canvas2Wid").value;
+        heihei=document.getElementById("canvas2Hei").value;
     });
 
-        canvas2Hei.style.textAlign = 'right';
-    canvas2Hei.addEventListener('change', function () {
-        document.getElementById("canvas2").height = this.value;
-    });
-
-            canvas2X.style.textAlign = 'right';
-    canvas2X.addEventListener('change', function () {
-        document.getElementById("canvas2").style.left = this.value + "px";
-    });
-
-            canvas2Y.style.textAlign = 'right';
-    canvas2Y.addEventListener('change', function () {
-        document.getElementById("canvas2").style.top = this.value + "px";
-    });

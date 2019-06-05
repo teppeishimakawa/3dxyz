@@ -74,17 +74,18 @@ https://opensource.org/licenses/mit-license.php-->
 <!--script src="./js/TrackballControls.js"></script-->
     <div id="col_dis">
         <input id="color" type="color" value="#00ff00" />
-        <input id="distance" type="number" value="500" style="width:50px;" />
-        <input id="canvas2Wid" type="number" value="100" style="width:50px;"/>
-        <input id="canvas2Hei" type="number" value="100" style="width:50px;"/>
-        <input id="canvas2X" type="number" value="0" style="width:50px;"/>
-        <input id="canvas2Y" type="number" value="0" style="width:50px;"/>
+        <input id="distance" type="number" value="500" style="width:50px;"/>
+        <input id="canvas2Wid" type="text"  style="width:50px;"/>
+        <input id="canvas2Hei" type="text"  style="width:50px;"/>
+        <input id="canvas2X" type="text"  style="width:50px;"/>
+        <input id="canvas2Y" type="text"  style="width:50px;"/>
+        <input id="mask" type="button" value="mask" style="width:50px;"/>
         <br>
         <span id="res">result</span>
     </div>
         <div id="bg">
         <video id="video2" autoplay></video>
-        <canvas id="canvas2" width="100" height="100"></canvas>
+        <canvas id="canvas2"></canvas>
     </div>
 
 <!--three.jsのレイヤー-->
@@ -141,6 +142,7 @@ https://opensource.org/licenses/mit-license.php-->
 <input type="text" id="kake" value="1" size="10" class="kake">
 <br>
 <input type="button" id="conf" value="save_conf" size="10">
+
 <div id="analyz_p1x" size="10"></div>
 <div id="analyz_p1y" size="10"></div>
 <br>
@@ -873,22 +875,38 @@ const observer = new MutationObserver((mutations) => {
     mutations.forEach((mutation) => {
         console.log(mutation.target);
         ana1();
-        ana2();
     });
 });
-
 /** 監視時のオプション */
 const config = {
   attributes: true,
   childList: true,
-  characterData: true,
-  attributeOldValue: true,
-  characterDataOldValue: true
+  //characterData: true,
+  //attributeOldValue: true,
+  //characterDataOldValue: true
 };
-
 /** 要素の変化監視をスタート */
 observer.observe(elem, config);
 
+
+/** 監視対象の要素オブジェクト */
+const elem2 = document.getElementById("analyz_p2y");
+const observer2 = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+        console.log(mutation.target);
+        ana2();
+    });
+});
+/** 監視時のオプション */
+const config2 = {
+  attributes: true,
+  childList: true,
+  //characterData: true,
+  //attributeOldValue: true,
+  //characterDataOldValue: true
+};
+/** 要素の変化監視をスタート */
+observer2.observe(elem2, config2);
 
 /*
 //ajax
