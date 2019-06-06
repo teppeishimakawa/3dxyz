@@ -42,7 +42,6 @@ var video2 = document.getElementById('video2');
         chromaKey();
         requestAnimationFrame(draw);
         if(j== null){return}
-        console.log(j);
        document.getElementById("res").innerHTML=j;
        //透明でないピクセル番号をx,yスクリーン座標に変換
         /*d
@@ -52,12 +51,10 @@ var video2 = document.getElementById('video2');
        3+(k*4)=j (j>=3)
         */
         document.getElementById("analyz_p2x").innerHTML=((j-3)/4)%(parseInt(widwid) + 1) + parseInt(xx);
-        console.log(parseInt(((j-3)/4)%(widwid + 1)))
-        console.log(widwid);
-        console.log(xx);
         //console.log((j-3)/4);
         document.getElementById("analyz_p2y").innerHTML=parseInt(Math.floor((j-3)/4)/(parseInt(widwid) + 1) + parseInt(yy));
         j=null;
+        document.getElementById("kekka").innerHTML=parseFloat(document.getElementById("txt5").value).toFixed(2);
     };
 
     // 消す色と閾値
@@ -95,7 +92,7 @@ var video2 = document.getElementById('video2');
             finresult.push(i);
             //jは透明でない最小のpixel番号
             j=finresult.reduce((a,b)=>Math.min(a,b));
-            setTimeout(function(){finresult.length=0;},5000);
+            setTimeout(function(){finresult.length=0;},3000);
             }
             /*var j=finresult.reduce((a,b)=>Math.min(a,b));
             finresult2.push(j);
