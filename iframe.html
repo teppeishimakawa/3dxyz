@@ -1,0 +1,30 @@
+
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"/>
+<link rel="stylesheet" href="./style.css"/>
+</head>
+<body>
+<iframe src="index.html" id="frame1" width="1280" height="500" ></iframe>
+<iframe src="indexget.html" id="frame2" width="1280" height="200" style="top:600px,left:0px">
+</iframe>
+<script type="text/javascript">
+
+window.onload = function() {
+    //var doc = document.getElementById("frame1").contentWindow.document;
+    //var doc2 = document.getElementById("frame2").contentWindow.document;
+    setInterval(function(){document.getElementById("frame2").contentWindow.document.getElementById("target1").innerHTML=document.getElementById("frame1").contentWindow.document.getElementById("kekka").innerHTML;},100);
+
+  }
+
+
+    //doc2.getElementById("final_value").innerHTML=doc.getElementById("kekka").innerHTML;
+
+
+
+</script>
+</body>
+</html>

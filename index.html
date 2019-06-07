@@ -922,14 +922,24 @@ const config = {
 observer.observe(elem, config);
 
 
+
+
+
+
+
 /** 監視対象の要素オブジェクト */
 const elem2 = document.getElementById("analyz_p2y");
-const observer2 = new MutationObserver((mutations) => {
+const observer2 = new MutationObserver((mutations) =>
+//監視の括弧
+{
     mutations.forEach((mutation) => {
         //console.log(mutation.target);
         ana2();
     });
+//監視の終了括弧
 });
+
+
 /** 監視時のオプション */
 const config2 = {
   attributes: true,
@@ -941,14 +951,13 @@ const config2 = {
 /** 要素の変化監視をスタート */
 observer2.observe(elem2, config2);
 
+
 /*
 //ajax
 var xhr = new XMLHttpRequest();
-
-xhr.open("GET", 【どのサーバーに？】);
+xhr.open("GET", 'indexget.html?param=' + document.getElementById("txt5").value,true);
 xhr.send();
-
-
+//'indexget.html?param=aaa' + 'param=' + document.getElementById("txt5").value,true
 xhr.onreadystatechange = function()
 {
 //0 準備段階  まだ通信は行われていない状態
@@ -964,12 +973,11 @@ xhr.onreadystatechange = function()
 //503 エラー サーバーに負荷がかかって通信できない状態
     if ( xhr.readyState === 4 && xhr.status === 200)
     {
-
+       console.log("tx done!");
         //データ取得処理を書く
-
     }
 }
-*/
+
 
 /*
 //websocket
