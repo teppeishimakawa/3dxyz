@@ -95,10 +95,6 @@ https://opensource.org/licenses/mit-license.php-->
 <!--visibility:hidden-->
 
 
-
-    <script type="text/javascript" src="./chromatest.js"></script>
-
-
 <!--左ボタン群のレイヤー-->
 <div id="div1">
 <label for="txt1">point1(a)_x:</label>
@@ -220,6 +216,11 @@ https://opensource.org/licenses/mit-license.php-->
   oninput="document.getElementById('output4').value=this.value">
   <output id="output4">0</output>
 <br>
+<label">CamRotZ:</label>
+<input type="range" id="rotZ" value="0" min="-25" max="25" step="1"
+  oninput="document.getElementById('output1000').value=this.value">
+  <output id="output1000">0</output>
+<br>
 <label">fov:</label>
 <input type="range" id="fov" value="60" min="1" max="200" step="1"
   oninput="document.getElementById('outputFov').value=this.value">
@@ -318,6 +319,16 @@ document.getElementById("fov").value=localStorage.getItem("num7");
 document.getElementById("outputFov").value=localStorage.getItem("num700");
 
   fov=document.getElementById("fov").value;
+
+
+document.getElementById("color").value=localStorage.getItem("sto_col");
+document.getElementById("distance").value=localStorage.getItem("sto_dis");
+colorDistance=localStorage.getItem("sto_dis");
+document.getElementById("canvas2Wid").value=localStorage.getItem("sto_2Wid");
+document.getElementById("canvas2Hei").value=localStorage.getItem("sto_2Hei");
+document.getElementById("canvas2X").value=localStorage.getItem("sto_2X");
+document.getElementById("canvas2Y").value=localStorage.getItem("sto_2Y");
+
 
   //document.getElementById("txt60").innerHTML=localStorage.getItem("num1001");
 
@@ -492,6 +503,12 @@ document.getElementById("outputFov").value=localStorage.getItem("num700");
 
 
 //rotYのrange操作
+  var rot2=0;
+  var targetRot2 = (document.getElementById('rotZ').value) * 180;
+  rot2 += (targetRot2 - rot2)* 0.02;
+  var radian2 = rot2 * Math.PI / 180;
+
+//rotYのrange操作
   var rot1=0;
   var targetRot1 = (document.getElementById('rotX').value) * 180;
   rot1 += (targetRot1 - rot1)* 0.02;
@@ -507,7 +524,7 @@ document.getElementById("outputFov").value=localStorage.getItem("num700");
   var radian = rot * Math.PI / 180;
   // 角度に応じてカメラの位置を設定
   camera.position.x = -1000 * Math.cos(radian)*Math.cos(radian1);
-  camera.position.y = 1000 * Math.sin(radian) ;
+  camera.position.y = 1000 * Math.sin(radian);
   camera.position.z = 1000 * Math.cos(radian)*Math.sin(radian1);
   //console.log(a);
 
@@ -834,6 +851,18 @@ document.getElementById("conf").addEventListener('click', function(ev)
 
     localStorage.setItem("num7",document.getElementById("fov").value);
     localStorage.setItem("num700",document.getElementById("outputFov").value);
+
+    //chroma関連のlocalstorage
+    localStorage.setItem("sto_col",document.getElementById("color").value);
+    localStorage.setItem("sto_dis",document.getElementById("distance").value);
+    localStorage.setItem("sto_2Wid",document.getElementById("canvas2Wid").value);
+    localStorage.setItem("sto_2Hei",document.getElementById("canvas2Hei").value);
+    localStorage.setItem("sto_2X",document.getElementById("canvas2X").value);
+    localStorage.setItem("sto_2Y",document.getElementById("canvas2Y").value);
+
+
+
+
    });
 
 document.getElementById("default").addEventListener('click', function(ev)
@@ -897,7 +926,7 @@ observer.observe(elem, config);
 const elem2 = document.getElementById("analyz_p2y");
 const observer2 = new MutationObserver((mutations) => {
     mutations.forEach((mutation) => {
-        console.log(mutation.target);
+        //console.log(mutation.target);
         ana2();
     });
 });
@@ -978,6 +1007,7 @@ connection.onmessage = function(e) {
     }
 */
 </script>
+<script type="text/javascript" src="./chromatest.js"></script>
 <!--script type="module">
 //node.js用
 export let dista = document.getElementById("txt5").value;

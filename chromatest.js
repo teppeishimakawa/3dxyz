@@ -4,8 +4,18 @@ var j;
 
 var xx=0;
 var yy=0;
-var widwid=100;
-var heihei=100;
+var widwid=1280;
+var heihei=720;
+var flg_chroma;
+
+
+xx=document.getElementById('canvas2X').value;
+yy=document.getElementById('canvas2Y').value;
+widwid=document.getElementById('canvas2Wid').value;
+heihei=document.getElementById('canvas2Hei').value;
+
+
+
 
 var video2 = document.getElementById('video2');
     // video2は非表示にしておく
@@ -30,8 +40,17 @@ var video2 = document.getElementById('video2');
 
         draw();
 
+        /*
+        if(finresult.length == 0){
+        document.getElementById("kekka").style.color="black";
+        }else{document.getElementById("kekka").style.color="red";}
+        */
 
     }, function () {});
+
+
+
+
 
     // video2の映像をcanvas2に描画する
     var draw = function () {
@@ -54,12 +73,32 @@ var video2 = document.getElementById('video2');
         //console.log((j-3)/4);
         document.getElementById("analyz_p2y").innerHTML=parseInt(Math.floor((j-3)/4)/(parseInt(widwid) + 1) + parseInt(yy));
         j=null;
-        document.getElementById("kekka").innerHTML=parseFloat(document.getElementById("txt5").value).toFixed(2);
+        document.getElementById("kekka").innerHTML=parseInt(document.getElementById("txt5").value);
+
+        if(flg_chroma == 1)
+        {
+        setTimeout(function(){finresult.length=0},5000);
+        flg_chroma=0;
+        }
+
+
     };
 
+
+
+var sto_col_val=localStorage.getItem("sto_col");
+sto_col_val = sto_col_val.replace(/^#/, '');
+
     // 消す色と閾値
-    var chromaKeyColor = {r: 0, g: 255, b: 0},
-        colorDistance = 500;
+        var chromaKeyColor = {r: parseInt(sto_col_val.substr(0, 2), 16),
+                              g: parseInt(sto_col_val.substr(2, 2), 16),
+                              b: parseInt(sto_col_val.substr(4, 2), 16)}
+        //colorDistance = 500;
+
+
+
+
+
 
     // クロマキー処理
     var chromaKey = function ()
@@ -90,15 +129,22 @@ var video2 = document.getElementById('video2');
             else
             {
             finresult.push(i);
-            //jは透明でない最小のpixel番号
             j=finresult.reduce((a,b)=>Math.min(a,b));
-            setTimeout(function(){finresult.length=0;},3000);
+            flg_chroma=1;
+            /*
+            //finresult.length=0;
+            if(finresult.length == 0){return false}else
+                {setTimeout(function()
+                {finresult.length=0},5000);}
+                */
+
+            //jは透明でない最小のpixel番号
+            //console.log(finresult.length);
             }
             /*var j=finresult.reduce((a,b)=>Math.min(a,b));
             finresult2.push(j);
             var k=finresult2.join(',');
             console.log(k); */
-
         }
 
            //finresult.push(i);
@@ -118,12 +164,15 @@ var video2 = document.getElementById('video2');
     };
 
     var color = document.getElementById('color');
+
+
     color.addEventListener('change', function () {
         // フォームの値は16進カラーコードなのでrgb値に変換する
         chromaKeyColor = color2rgb(this.value);
+        console.log("ok2");
     });
 
-    var color2rgb = function (color) {
+       var color2rgb = function (color) {
         color = color.replace(/^#/, '');
         return {
             r: parseInt(color.substr(0, 2), 16),
@@ -131,6 +180,8 @@ var video2 = document.getElementById('video2');
             b: parseInt(color.substr(4, 2), 16)
         };
     };
+
+
 
 
 
