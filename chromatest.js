@@ -61,6 +61,7 @@ var video2 = document.getElementById('video2');
         chromaKey();
         requestAnimationFrame(draw);
         if(j== null){return}
+        //jは透明でない、一番小さいピクセル番号
        document.getElementById("res").innerHTML=j;
        //透明でないピクセル番号をx,yスクリーン座標に変換
         /*d
@@ -73,7 +74,9 @@ var video2 = document.getElementById('video2');
         //console.log((j-3)/4);
         document.getElementById("analyz_p2y").innerHTML=parseInt(Math.floor((j-3)/4)/(parseInt(widwid) + 1) + parseInt(yy));
         j=null;
-        document.getElementById("kekka").innerHTML=parseInt(document.getElementById("txt5").value);
+        //p2の検出からxyz変換、距離算出に時間が掛かるから100msの遅延挿入
+        setTimeout(function(){document.getElementById("kekka").innerHTML=document.getElementById("txt5").value;},100);
+
 
         if(flg_chroma == 1)
         {
@@ -169,7 +172,6 @@ sto_col_val = sto_col_val.replace(/^#/, '');
     color.addEventListener('change', function () {
         // フォームの値は16進カラーコードなのでrgb値に変換する
         chromaKeyColor = color2rgb(this.value);
-        console.log("ok2");
     });
 
        var color2rgb = function (color) {

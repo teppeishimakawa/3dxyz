@@ -3,11 +3,94 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"/>
-<link rel="stylesheet" href="./style.css"/>
+<link rel="stylesheet" href="./odometer-master/themes/odometer-theme-digital.css" />
+<script src="./odometer-master/odometer.js"></script>
 </head>
 <body>
-<div id="gamen2" style="font-size:200px"></div>
+
+<div id="gamen2" ></div>
+
+<style>
+html,body
+{
+    hight: 100%;    /*高さを100％に設定*/
+}
+      #gamen2
+      {
+    position:absolute;
+    display: flex;
+    align-items: center; /* 縦方向中央揃え */
+    justify-content: center; /* 横方向中央揃え */
+    width: 600px;   /*横幅*/
+    height: 400px;  /*縦幅*/
+    background-color:#00ff00;
+    top:25%;
+    left:25%;
+    font-size:200px;
+      }
+</style>
 <script type="text/javascript">
+var elem3 = document.getElementById("gamen2");
+var elem3arry=[];
+
+const observer3 = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+        //console.log(mutation.target);
+
+
+        elem3arry.push(parseInt(elem3.innerHTML));
+        console.log(elem3arry);
+
+
+var a1=elem3arry[elem3arry.length-2];
+var a2=elem3arry[elem3arry.length-1];
+var a3=elem3arry[elem3arry.length-6];
+var a4=elem3arry[elem3arry.length-5];
+var a5=elem3arry[elem3arry.length-10];
+var a6=elem3arry[elem3arry.length-9];
+
+
+         if((a1 == a2) && (a2 == a3)&& (a3 == a4) && (a4 == a5)&& (a5 == a6) 
+          && (typeof a3 !== "undefined") && (typeof a4 !== "undefined") 
+          && (typeof a5 !== "undefined") && (typeof a6 !== "undefined"))
+          {
+           elem3.style.visibility="visible";
+           //console.log("visible");
+          }else{
+           elem3.style.visibility="hidden";
+           //console.log("hidden");
+          }
+
+          if(elem3arry.length == 50)
+          {
+          elem3arry.shift();
+          }
+
+/*
+　　　　　　console.log(a1);
+          console.log(a2);
+           console.log(a3);
+           console.log(a4);
+           console.log(a5);
+           console.log(a6);
+*/
+
+    });
+});
+/** 監視時のオプション */
+const config3 = {
+  attributes: true,
+  childList: true,
+  //characterData: true,
+  //attributeOldValue: true,
+  //characterDataOldValue: true
+};
+// 要素の変化監視をスタート
+observer3.observe(elem3, config3);
+
+
+
+
 
 
 
@@ -22,7 +105,6 @@ xhr.onreadystatechange = function() {
     }
 }
 */
-
 
 </script>
 </body>

@@ -245,6 +245,7 @@ var controls;
 
 var width  = 1280;
 var height = 720;
+//var camid='40bc8bffbbeb5a97e7c873435d0013828f67a0b150045b5f293cc86f2fe17d26'
 var fov;
 var aspect = width / height;
 var near   = 1;
@@ -403,6 +404,7 @@ document.getElementById("canvas2Y").value=localStorage.getItem("sto_2Y");
   {
   //明示的にアスペクト比指定しないとfacetimeHDcamは正方形になるから。
   //aspectRatio: {exact: 1.7777777778},
+  //optional:[{sourceId:camid}],
   width: 1280,height:720
   }
   });
@@ -417,7 +419,7 @@ document.getElementById("canvas2Y").value=localStorage.getItem("sto_2Y");
   videoBitsPerSecond : 512000, // 512kbits / sec
   mimeType : 'video/webm; codecs=vp9'
   }) // 映像の入力ソースをユーザーのデバイスから取得
-  console.log(recorder);
+  //console.log(recorder);
   recorder.ondataavailable = function (e)//rec終了のタイミングで呼び出される
     {
       video.srcObject = null;
@@ -719,7 +721,7 @@ if ( intersects.length > 0 )
     p2x=document.getElementById("txt3").value;
     p2y=document.getElementById("txt101").value;
     p2z=document.getElementById("txt4").value;
-    document.getElementById("txt5").value=Math.sqrt(Math.pow((p2x-p1x),2)+Math.pow((p2z-p1z),2)).toFixed(2)*kake_value;
+    document.getElementById("txt5").value=parseInt(Math.sqrt(Math.pow((p2x-p1x),2)+Math.pow((p2z-p1z),2)).toFixed(2)*kake_value);
 
 //ファイル送信
 /*
@@ -906,7 +908,7 @@ document.getElementById("inputxy2").addEventListener('click', function(ev)
 const elem = document.getElementById("analyz_p1y");
 const observer = new MutationObserver((mutations) => {
     mutations.forEach((mutation) => {
-        console.log(mutation.target);
+        //console.log(mutation.target);
         ana1();
     });
 });

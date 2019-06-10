@@ -9,8 +9,8 @@
 </head>
 <body>
 <iframe src="index.html" id="frame1" width="1280" height="720" ></iframe>
-<iframe src="indexget.html" id="frame2" width="1280" height="0" style="top:600px,left:0px">
-</iframe>
+<iframe src="indexget.html" id="frame2" width="1280" height="0" style="top:600px,left:0px"></iframe>
+
 <input type="button" id="kirikae" value="screen chg">
 <script type="text/javascript">
 
@@ -24,9 +24,11 @@ frm2.style.height=subwin;
 window.onload = function() {
     //var doc = document.getElementById("frame1").contentWindow.document;
     //var doc2 = document.getElementById("frame2").contentWindow.document;
+
     setInterval(function(){document.getElementById("frame2").contentWindow.document.getElementById("gamen2").innerHTML=document.getElementById("frame1").contentWindow.document.getElementById("kekka").innerHTML;},500);
   }
 //doc2.getElementById("final_value").innerHTML=doc.getElementById("kekka").innerHTML;
+
 
 
 document.getElementById("kirikae").addEventListener('click',function()
