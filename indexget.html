@@ -9,6 +9,7 @@
 <body>
 
 <div id="gamen2" ></div>
+<div id="calc">計測中...</div>
 
 <style>
 html,body
@@ -23,15 +24,45 @@ html,body
     justify-content: center; /* 横方向中央揃え */
     width: 600px;   /*横幅*/
     height: 400px;  /*縦幅*/
-    background-color:#00ff00;
+    background-color:#8fbc8f;
     top:25%;
     left:25%;
     font-size:200px;
+    font-family:'Impact';
+    color:#eeeeee;
+    -webkit-text-stroke: 1px #000;
+    text-stroke: 1px #000;
+    text-shadow: 5px 5px 15px #999999;
       }
+
+      #calc
+      {
+    position:absolute;
+    display: flex;
+    align-items: center; /* 縦方向中央揃え */
+    justify-content: center; /* 横方向中央揃え */
+    width: 600px;   /*横幅*/
+    height: 400px;  /*縦幅*/
+    background-color:#8fbc8f;
+    top:25%;
+    left:25%;
+    font-size:100px;
+    font-family:'Impact';
+    color:#eeeeee;
+    -webkit-text-stroke: 1px #000;
+    text-stroke: 1px #000;
+    text-shadow: 5px 5px 15px #999999;
+      }
+
 </style>
 <script type="text/javascript">
+  //gamen2の数値変化監視
 var elem3 = document.getElementById("gamen2");
 var elem3arry=[];
+var flgcalc;
+
+
+
 
 const observer3 = new MutationObserver((mutations) => {
     mutations.forEach((mutation) => {
@@ -39,7 +70,7 @@ const observer3 = new MutationObserver((mutations) => {
 
 
         elem3arry.push(parseInt(elem3.innerHTML));
-        console.log(elem3arry);
+        //console.log(elem3arry);
 
 
 var a1=elem3arry[elem3arry.length-2];
@@ -50,15 +81,24 @@ var a5=elem3arry[elem3arry.length-10];
 var a6=elem3arry[elem3arry.length-9];
 
 
+var calc = document.getElementById("calc");
+
+
+//数値が落ち着いたら表示する
          if((a1 == a2) && (a2 == a3)&& (a3 == a4) && (a4 == a5)&& (a5 == a6) 
           && (typeof a3 !== "undefined") && (typeof a4 !== "undefined") 
           && (typeof a5 !== "undefined") && (typeof a6 !== "undefined"))
           {
+          calc.style.visibility="hidden"
            elem3.style.visibility="visible";
            //console.log("visible");
           }else{
            elem3.style.visibility="hidden";
+
            //console.log("hidden");
+
+           calc.style.visibility="visible"
+
           }
 
           if(elem3arry.length == 50)
@@ -89,6 +129,15 @@ const config3 = {
 observer3.observe(elem3, config3);
 
 
+
+           var min = 1 ;
+           var max = 200 ;
+
+           setInterval(function()
+           {
+            var randomVal = Math.floor( Math.random() * (max + 1 - min) ) + min ;
+            calc.innerHTML=randomVal;
+           },60);
 
 
 
