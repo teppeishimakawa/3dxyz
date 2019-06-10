@@ -8,22 +8,39 @@
 <link rel="stylesheet" href="./style.css"/>
 </head>
 <body>
-<iframe src="index.html" id="frame1" width="1280" height="500" ></iframe>
-<iframe src="indexget.html" id="frame2" width="1280" height="200" style="top:600px,left:0px">
+<iframe src="index.html" id="frame1" width="1280" height="720" ></iframe>
+<iframe src="indexget.html" id="frame2" width="1280" height="0" style="top:600px,left:0px">
 </iframe>
+<input type="button" id="kirikae" value="screen chg">
 <script type="text/javascript">
+
+var frm1=document.getElementById("frame1");
+var frm2=document.getElementById("frame2");
+var mainwin='720px';
+var subwin='0px';
+frm1.style.height=mainwin;
+frm2.style.height=subwin;
 
 window.onload = function() {
     //var doc = document.getElementById("frame1").contentWindow.document;
     //var doc2 = document.getElementById("frame2").contentWindow.document;
-    setInterval(function(){document.getElementById("frame2").contentWindow.document.getElementById("target1").innerHTML=document.getElementById("frame1").contentWindow.document.getElementById("kekka").innerHTML;},100);
-
+    setInterval(function(){document.getElementById("frame2").contentWindow.document.getElementById("gamen2").innerHTML=document.getElementById("frame1").contentWindow.document.getElementById("kekka").innerHTML;},500);
   }
+//doc2.getElementById("final_value").innerHTML=doc.getElementById("kekka").innerHTML;
 
 
-    //doc2.getElementById("final_value").innerHTML=doc.getElementById("kekka").innerHTML;
-
-
+document.getElementById("kirikae").addEventListener('click',function()
+	{
+     if(frm1.style.height == mainwin)
+      {
+      frm1.style.height=subwin;
+      frm2.style.height=mainwin;
+      }else
+      {
+      frm1.style.height=mainwin;
+      frm2.style.height=subwin;
+      }
+	});
 
 </script>
 </body>
