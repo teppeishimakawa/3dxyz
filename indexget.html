@@ -3,13 +3,17 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"/>
-<link rel="stylesheet" href="./odometer-master/themes/odometer-theme-digital.css" />
-<script src="./odometer-master/odometer.js"></script>
+<link rel="stylesheet" href="animate.min.css">
 </head>
 <body>
+<div id="bg" ></div>
+<div id="gamen2" style="visibility:hidden"></div>
+<div id="gamen2hitoketa" ></div>
+<!--class="animated  rubberBand"-->
+<div id="gamen2niketa" ></div>
+<div id="gamen2sanketa" ></div>
 
-<div id="gamen2" ></div>
-<div id="calc">計測中...</div>
+<div id="calc"></div>
 <!--div id="spacefng2"></div-->
 
 <style>
@@ -29,6 +33,84 @@ html,body
     top:25%;
     left:25%;
     font-size:200px;
+    font-family:'Impact';
+    color:#eeeeee;
+    -webkit-text-stroke: 1px #000;
+    text-stroke: 1px #000;
+    text-shadow: 5px 5px 15px #999999;
+      }
+
+     #gamen2hitoketa
+      {
+    position:absolute;
+    display: flex;
+    align-items: center; /* 縦方向中央揃え */
+    justify-content: center; /* 横方向中央揃え */
+    width: 600px;   /*横幅*/
+    height: 400px;  /*縦幅*/
+    top:25%;
+    left:33%;
+    font-size:200px;
+    font-family:'Impact';
+    color:#eeeeee;
+    -webkit-text-stroke: 1px #000;
+    text-stroke: 1px #000;
+    text-shadow: 5px 5px 15px #999999;
+  /*animation-duration: 2s; アニメーションの時間
+  animation-delay: 10s; アニメーション開始時間
+  animation-iteration-count: infinite; アニメーションの繰り返し回数 */
+      }
+
+     #gamen2niketa
+      {
+    position:absolute;
+    display: flex;
+    align-items: center; /* 縦方向中央揃え */
+    justify-content: center; /* 横方向中央揃え */
+    width: 600px;   /*横幅*/
+    height: 400px;  /*縦幅*/
+    top:25%;
+    left:25%;
+    font-size:200px;
+    font-family:'Impact';
+    color:#eeeeee;
+    -webkit-text-stroke: 1px #000;
+    text-stroke: 1px #000;
+    text-shadow: 5px 5px 15px #999999;
+
+      }
+
+    #gamen2sanketa
+      {
+    position:absolute;
+    display: flex;
+    align-items: center; /* 縦方向中央揃え */
+    justify-content: center; /* 横方向中央揃え */
+    width: 600px;   /*横幅*/
+    height: 400px;  /*縦幅*/
+    top:25%;
+    left:17%;
+    font-size:200px;
+    font-family:'Impact';
+    color:#eeeeee;
+    -webkit-text-stroke: 1px #000;
+    text-stroke: 1px #000;
+    text-shadow: 5px 5px 15px #999999;
+
+      }
+
+      #bg
+      {
+    position:absolute;
+    display: flex;
+    align-items: center; /* 縦方向中央揃え */
+    justify-content: center; /* 横方向中央揃え */
+    width: 600px;   /*横幅*/
+    height: 400px;  /*縦幅*/
+    background-color:#8fbc8f;
+    top:25%;
+    left:25%;
+    font-size:100px;
     font-family:'Impact';
     color:#eeeeee;
     -webkit-text-stroke: 1px #000;
@@ -62,9 +144,6 @@ var elem3 = document.getElementById("gamen2");
 var elem3arry=[];
 var flgcalc;
 
-
-
-
 const observer3 = new MutationObserver((mutations) => {
     mutations.forEach((mutation) => {
         //console.log(mutation.target);
@@ -76,13 +155,23 @@ const observer3 = new MutationObserver((mutations) => {
 
 var a1=elem3arry[elem3arry.length-2];
 var a2=elem3arry[elem3arry.length-1];
-var a3=elem3arry[elem3arry.length-8];
-var a4=elem3arry[elem3arry.length-7];
-var a5=elem3arry[elem3arry.length-16];
-var a6=elem3arry[elem3arry.length-15];
+var a3=elem3arry[elem3arry.length-6];
+var a4=elem3arry[elem3arry.length-5];
+var a5=elem3arry[elem3arry.length-10];
+var a6=elem3arry[elem3arry.length-9];
 
 
 var calc = document.getElementById("calc");
+
+
+var first=document.getElementById("gamen2hitoketa");
+var second=document.getElementById("gamen2niketa");
+var third=document.getElementById("gamen2sanketa");
+
+first.innerHTML=elem3.innerHTML.slice(2,3); //1桁目
+second.innerHTML=elem3.innerHTML.slice(1,2); //2桁目
+third.innerHTML=elem3.innerHTML.slice(0,1); //3桁目
+
 
 
 //数値が落ち着いたら表示する
@@ -91,11 +180,14 @@ var calc = document.getElementById("calc");
           && (typeof a5 !== "undefined") && (typeof a6 !== "undefined"))
           {
           calc.style.visibility="hidden"
-           elem3.style.visibility="visible";
+           first.style.visibility="visible";
+           setTimeout(function(){second.style.visibility="visible";},400);
+           setTimeout(function(){third.style.visibility="visible";},800);
            //console.log("visible");
           }else{
-           elem3.style.visibility="hidden";
-
+           first.style.visibility="hidden";
+           second.style.visibility="hidden";
+           third.style.visibility="hidden";
            //console.log("hidden");
 
            calc.style.visibility="visible"
@@ -137,11 +229,9 @@ observer3.observe(elem3, config3);
            setInterval(function()
            {
             var randomVal = Math.floor( Math.random() * (max + 1 - min) ) + min ;
+            randomVal=("000" + randomVal).slice( -3 );
             calc.innerHTML=randomVal;
            },60);
-
-
-
 
 
 /*

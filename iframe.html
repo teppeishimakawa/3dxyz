@@ -48,9 +48,8 @@ window.onload = function() {
     setInterval(function()
       {document.getElementById("frame2").contentWindow.document.getElementById("gamen2").innerHTML=document.getElementById("frame1").contentWindow.document.getElementById("kekka").innerHTML;
       if (document.getElementById("frame1").contentWindow.document.getElementById("spaceflg1").innerHTML == 1)
-           {
-            document.getElementById("ready").innerHTML='ready ok';
-           }else{document.getElementById("ready").innerHTML='Hit space key for start!!';};
+           {document.getElementById("ready").innerHTML='ready!!';}else
+           {document.getElementById("ready").innerHTML='Hit space key for start!';};
       },500);
 
   }

@@ -275,6 +275,8 @@ var objects;
 var flg=0;
 var video;
 
+var sanketa;
+
 
 init();
 animate();
@@ -744,7 +746,9 @@ if ( intersects.length > 0 )
     p2z=document.getElementById("txt4").value;
     document.getElementById("txt5").value=parseInt(Math.sqrt(Math.pow((p2x-p1x),2)+Math.pow((p2z-p1z),2)).toFixed(2)*kake_value);
     //distance値を表示用にdivのinnerHTMLにコピー
-    document.getElementById("kekka").innerHTML=document.getElementById("txt5").value;
+    sanketa=document.getElementById("txt5").value;
+    sanketa=("000" + sanketa).slice( -3 );
+    document.getElementById("kekka").innerHTML=sanketa;
 //ファイル送信
 /*
 var json_obj=
