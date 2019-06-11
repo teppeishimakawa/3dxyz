@@ -245,7 +245,7 @@ var controls;
 
 var width  = 1280;
 var height = 720;
-//var camid='40bc8bffbbeb5a97e7c873435d0013828f67a0b150045b5f293cc86f2fe17d26'
+var camid='40bc8bffbbeb5a97e7c873435d0013828f67a0b150045b5f293cc86f2fe17d26'
 var fov;
 var aspect = width / height;
 var near   = 1;
@@ -321,6 +321,9 @@ document.getElementById("outputFov").value=localStorage.getItem("num700");
 
   fov=document.getElementById("fov").value;
 
+document.getElementById("txt1").value=localStorage.getItem("p1x_sto");
+document.getElementById("txt100").value=localStorage.getItem("p1y_sto");
+document.getElementById("txt2").value=localStorage.getItem("p1z_sto");
 
 document.getElementById("color").value=localStorage.getItem("sto_col");
 document.getElementById("distance").value=localStorage.getItem("sto_dis");
@@ -396,6 +399,10 @@ document.getElementById("canvas2Y").value=localStorage.getItem("sto_2Y");
   scene.add( wireframe );
 
 
+
+
+
+/*//////////////////////距離と高さ計測、レコード機能の為に必須なブロック!!!
   video=document.getElementById("myVideo");
   var media=navigator.mediaDevices.getUserMedia
   ({
@@ -404,14 +411,19 @@ document.getElementById("canvas2Y").value=localStorage.getItem("sto_2Y");
   {
   //明示的にアスペクト比指定しないとfacetimeHDcamは正方形になるから。
   //aspectRatio: {exact: 1.7777777778},
-  //optional:[{sourceId:camid}],
   width: 1280,height:720
+  },
+  video:
+  {
+  optional:[{sourceId:camid}]
   }
+  //facingMode: { exact: "environment" },
   });
 
   media.then(function(stream)
   {
   video.srcObject = stream;
+
 
   //recorder
   recorder = new MediaRecorder(stream,
@@ -457,6 +469,8 @@ document.getElementById("canvas2Y").value=localStorage.getItem("sto_2Y");
       })
 //mediastreamの括弧
   })
+
+  *///////////////////////////////////////////////////////
 
 //deviceId取得
   navigator.mediaDevices.enumerateDevices()
@@ -607,7 +621,7 @@ function pageMove()
     p2x=document.getElementById("txt3").value;
     p2y=document.getElementById("txt101").value;
     p2z=document.getElementById("txt4").value;
-    //z押すと今まで値をlocal storageに保存
+    //z押すと今の値をlocal storageに保存
     localStorage.setItem("num1000",document.getElementById("txt5").value);
     //計算値を現在のフィールドに
     document.getElementById("txt5").value=Math.sqrt(Math.pow((p2x-p1x),2)+Math.pow((p2z-p1z),2)).toFixed(2)*kake_value;
@@ -722,7 +736,8 @@ if ( intersects.length > 0 )
     p2y=document.getElementById("txt101").value;
     p2z=document.getElementById("txt4").value;
     document.getElementById("txt5").value=parseInt(Math.sqrt(Math.pow((p2x-p1x),2)+Math.pow((p2z-p1z),2)).toFixed(2)*kake_value);
-
+    //distance値を表示用にdivのinnerHTMLにコピー
+    document.getElementById("kekka").innerHTML=document.getElementById("txt5").value;
 //ファイル送信
 /*
 var json_obj=
@@ -853,6 +868,11 @@ document.getElementById("conf").addEventListener('click', function(ev)
 
     localStorage.setItem("num7",document.getElementById("fov").value);
     localStorage.setItem("num700",document.getElementById("outputFov").value);
+
+　　//p1
+　　localStorage.setItem("p1x_sto",document.getElementById("txt1").value);
+　　localStorage.setItem("p1y_sto",document.getElementById("txt100").value);
+　　localStorage.setItem("p1z_sto",document.getElementById("txt2").value);
 
     //chroma関連のlocalstorage
     localStorage.setItem("sto_col",document.getElementById("color").value);

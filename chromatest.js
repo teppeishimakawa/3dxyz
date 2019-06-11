@@ -6,7 +6,12 @@ var xx=0;
 var yy=0;
 var widwid=1280;
 var heihei=720;
+var originalCan2Wid=1280;
+var originalCan2Hei=720;
 var flg_chroma;
+
+//測定精度。4で1pixl,64で16pixelごとに検知
+var seido=8;
 
 
 xx=document.getElementById('canvas2X').value;
@@ -22,19 +27,26 @@ var video2 = document.getElementById('video2');
     video2.style.display = 'none';
 
     var canvas2 = document.getElementById('canvas2');
-    canvas2.width=1280;
-    canvas2.height=720;
+    canvas2.width=originalCan2Wid;
+    canvas2.height=originalCan2Hei;
     // そのまま表示すると鏡像にならないので反転させておく
     video2.style.transform = 'rotateY(180deg)';
 
     var context = canvas2.getContext('2d');
 
     navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia;
-    navigator.getUserMedia({video:
+    navigator.getUserMedia({
+  video:
   {
   //明示的にアスペクト比指定しないとfacetimeHDcamは正方形になるから。
   //aspectRatio: {exact: 1.7777777778},
-  width: 1280,height:720}, audio: false}, function (stream) {
+  optional:[{sourceId:camid}]
+  },
+  video:
+  {
+  width: originalCan2Wid,height:originalCan2Hei
+  },
+  audio: false}, function (stream) {
         video2.srcObject = stream;
 
 
@@ -54,7 +66,7 @@ var video2 = document.getElementById('video2');
 
     // video2の映像をcanvas2に描画する
     var draw = function () {
-        context.clearRect(0, 0, 1280, 720);
+        context.clearRect(0, 0, originalCan2Wid, originalCan2Hei);
         //context.drawImage(video2,500,500,100,200,500,500,100,200);
         context.drawImage(video2,xx,yy,widwid,heihei,xx,yy,widwid,heihei);
         // ここでクロマキー処理をする
@@ -71,22 +83,18 @@ var video2 = document.getElementById('video2');
        3+(k*4)=j (j>=3)
         */
         document.getElementById("analyz_p2x").innerHTML=((j-3)/4)%(parseInt(widwid) + 1) + parseInt(xx);
-        //console.log((j-3)/4);
         document.getElementById("analyz_p2y").innerHTML=parseInt(Math.floor((j-3)/4)/(parseInt(widwid) + 1) + parseInt(yy));
         j=null;
         //p2の検出からxyz変換、距離算出に時間が掛かるから100msの遅延挿入
-        setTimeout(function(){document.getElementById("kekka").innerHTML=document.getElementById("txt5").value;},100);
-
+        //setTimeout(function(){document.getElementById("kekka").innerHTML=document.getElementById("txt5").value;},100);
 
         if(flg_chroma == 1)
         {
-        setTimeout(function(){finresult.length=0},5000);
+        setTimeout(function(){finresult.length=0},8000);
         flg_chroma=0;
         }
 
-
     };
-
 
 
 var sto_col_val=localStorage.getItem("sto_col");
@@ -115,7 +123,7 @@ sto_col_val = sto_col_val.replace(/^#/, '');
         // 右隣のピクセルのr,g,b,aの値が続く
         // n から n+4 までが1つのピクセルの情報となる
 
-        for (var i = 0, l = data.length; i < l; i += 64)
+        for (var i = 0, l = data.length; i < l; i += seido)
         {
             var target = {
                     r: data[i],
