@@ -90,9 +90,18 @@ var video2 = document.getElementById('video2');
 
         if(flg_chroma == 1)
         {
-        setTimeout(function(){finresult.length=0},8000);
+        //spaceで配列空にするパターンの時は下記不要
+        //setTimeout(function(){finresult.length=0},8000);
+        //flg_chroma=0;
+         }
+
+
+        if(document.getElementById("spaceflg1").innerHTML == 1)
+        {
+        finresult.length=0;
         flg_chroma=0;
-        }
+        document.getElementById("spaceflg1").innerHTML =0;
+         }
 
     };
 

@@ -11,6 +11,26 @@
 <iframe src="index.html" id="frame1" width="1280" height="720" ></iframe>
 <iframe src="indexget.html" id="frame2" width="1280" height="0"></iframe>
 <input type="button" id="kirikae" value="screen chg">
+<div id="ready"></div>
+<style>
+      #ready
+      {
+    position:absolute;
+    display: flex;
+    align-items: center; /* 縦方向中央揃え */
+    justify-content: center; /* 横方向中央揃え */
+    width: 400px;   /*横幅*/
+    height: 100px;  /*縦幅*/
+    top:95%;
+    left:65%;
+    font-size:40px;
+    font-family:'Impact';
+    color:#eeeeee;
+    -webkit-text-stroke: 1px #000;
+    text-stroke: 1px #000;
+    text-shadow: 5px 5px 15px #999999;
+      }
+</style>
 <script type="text/javascript">
 
 
@@ -25,7 +45,14 @@ frm2.style.height=subwin;
 
 //gamen2にkekka innerHTMLをコピー。500ms
 window.onload = function() {
-    setInterval(function(){document.getElementById("frame2").contentWindow.document.getElementById("gamen2").innerHTML=document.getElementById("frame1").contentWindow.document.getElementById("kekka").innerHTML;},500);
+    setInterval(function()
+      {document.getElementById("frame2").contentWindow.document.getElementById("gamen2").innerHTML=document.getElementById("frame1").contentWindow.document.getElementById("kekka").innerHTML;
+      if (document.getElementById("frame1").contentWindow.document.getElementById("spaceflg1").innerHTML == 1)
+           {
+            document.getElementById("ready").innerHTML='ready ok';
+           }else{document.getElementById("ready").innerHTML='Hit space key for start!!';};
+      },500);
+
   }
 //doc2.getElementById("final_value").innerHTML=doc.getElementById("kekka").innerHTML;
 
@@ -43,6 +70,23 @@ document.getElementById("kirikae").addEventListener('click',function()
       frm2.style.height=subwin;
       }
 	});
+
+
+document.getElementById("frame1").contentWindow.onkeydown = function(event)
+{
+if (event.keyCode == 32)
+ {document.getElementById("frame1").contentWindow.document.getElementById("spaceflg1").innerHTML=1;}
+};
+
+
+document.getElementById("frame2").contentWindow.onkeydown = function(event)
+{
+if (event.keyCode == 32)
+ {document.getElementById("frame1").contentWindow.document.getElementById("spaceflg1").innerHTML=1;}
+};
+
+
+
 
 </script>
 </body>
