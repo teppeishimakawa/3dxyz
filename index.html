@@ -2,6 +2,23 @@
 Released under the MIT license
 https://opensource.org/licenses/mit-license.php-->
 
+
+<!--/////////////////////////////////////////////////////
+自動計算のana2()処理パート。床面計算の時はp2y,p1yをp2z,p1zに
+document.getElementById("txt5").value=parseInt(Math.sqrt(Math.pow((p2x-p1x),2)+Math.pow((p2y-p1y),2)).toFixed(2)*kake_value);
+
+床面にする時はMath.PI*3/2
+plane.rotation.set(0,0,0);
+
+  //床面にする時はxをMath.PI*3/2に
+  wireframe.rotation.set(Math.PI*3/2,0,0);
+  gridHelper.rotation.set(Math.PI*3/2,0,0);
+
+    //床面の時はyをzに
+    //z押した時の処理。計算値を現在のフィールドに
+    document.getElementById("txt5").value=Math.sqrt(Math.pow((p2x-p1x),2)+Math.pow((p2y-p1y),2)).toFixed(2)*kake_value;
+///////////////////////////////////////////-->
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -21,7 +38,7 @@ https://opensource.org/licenses/mit-license.php-->
       {
         position:fixed;
 
-        z-index:3;
+        z-index:4;
       }
       #video2
       {
@@ -46,7 +63,7 @@ https://opensource.org/licenses/mit-license.php-->
         position:fixed;
         top:10px;
         left:10px;
-        font-size:8px;
+        font-size:3px;
         z-index:8;
       }
       #div2
@@ -59,8 +76,8 @@ https://opensource.org/licenses/mit-license.php-->
       }
      #col_dis
       {
-        left:10px;
-        bottom:10px;
+        left:0px;
+        bottom:0px;
         position:fixed;
         z-index:8;
       }
@@ -74,12 +91,12 @@ https://opensource.org/licenses/mit-license.php-->
 <!--script src="./js/TrackballControls.js"></script-->
     <div id="col_dis">
         <input id="color" type="color" value="#00ff00" />
-        <input id="distance" type="number" value="500" style="width:50px;"/>
-        <input id="canvas2Wid" type="text"  style="width:50px;"/>
-        <input id="canvas2Hei" type="text"  style="width:50px;"/>
-        <input id="canvas2X" type="text"  style="width:50px;"/>
-        <input id="canvas2Y" type="text"  style="width:50px;"/>
-        <input id="mask" type="button" value="mask" style="width:50px;"/>
+        <input id="distance" type="number" value="500" style="width:35px;"/>
+        <input id="canvas2Wid" type="text"  style="width:35px;"/>
+        <input id="canvas2Hei" type="text"  style="width:35px;"/>
+        <input id="canvas2X" type="text"  style="width:35px;"/>
+        <input id="canvas2Y" type="text"  style="width:35px;"/>
+        <input id="mask" type="button" value="mask" style="width:40px;"/>
         <br>
         <span id="res">result</span>
     </div>
@@ -98,25 +115,24 @@ https://opensource.org/licenses/mit-license.php-->
 <!--左ボタン群のレイヤー-->
 <div id="div1">
 <label for="txt1">point1(a)_x:</label>
-<input type="text" id="txt1" size="10">
+<input type="text" id="txt1" style="width:40px;">
 <label for="txt100">_y:</label>
-<input type="text" id="txt100" size="10">
+<input type="text" id="txt100" style="width:40px;">
 <label for="txt2">_z:</label>
-<input type="text" id="txt2" size="10">
+<input type="text" id="txt2" style="width:40px;">
 <br>
 <label for="txt3">point2(z)_x:</label>
-<input type="text" id="txt3" size="10">
+<input type="text" id="txt3" style="width:40px;">
 <label for="txt101">_y:</label>
-<input type="text" id="txt101" size="10">
+<input type="text" id="txt101" style="width:40px;">
 <label for="txt4">_z:</label>
-<input type="text" id="txt4" size="10">
+<input type="text" id="txt4" style="width:40px;">
 <br>
 <label for="txt5">distance:&nbsp;&nbsp;&nbsp;&nbsp;</label>
-<input type="text" id="txt5" class="txt55" size="10">
-&nbsp;&nbsp;&nbsp;&nbsp;
-<input type="button" id="btn1" value="plane_on" size="10">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<input type="button" id="btn2" value="plane_off" size="10">
+<input type="text" id="txt5" class="txt55" style="width:40px;">
+<br>
+<input type="button" id="btn1" value="plane_on" style="width:70px;">
+<input type="button" id="btn2" value="plane_off" style="width:70px;">
 &nbsp;&nbsp;
 <!--前のdistance-->
 <input type="text" id="txt50" size="7" >
@@ -124,18 +140,18 @@ https://opensource.org/licenses/mit-license.php-->
 <!--input type="text" id="txt60" class="txt60c" name="txt60n" size="7" value="ccc"-->
 <br>
 <label for="txt10" >point3(x)_x:</label>
-<input type="text" id="txt10" size="10">
+<input type="text" id="txt10" style="width:40px;">
 <label for="txt10">_y:</label>
-<input type="text" id="txt11" size="10">
+<input type="text" id="txt11" style="width:40px;">
 <label for="txt11">_z:</label>
-<input type="text" id="txt12" size="10">
+<input type="text" id="txt12" style="width:40px;">
 <br>
 <label for="txt13">top_y:</label>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<input type="text" id="txt13" size="10">
+<input type="text" id="txt13" style="width:40px;">
 <br>
 <label for="txt6">multi_para:</label>
-<input type="text" id="kake" value="1" size="10" class="kake">
+<input type="text" id="kake" value="1" style="width:40px;" class="kake">
 <br>
 <input type="button" id="conf" value="save_conf" size="10">
 
@@ -147,6 +163,7 @@ https://opensource.org/licenses/mit-license.php-->
 
 <br>
 <input type="button" id="inputxy" size="10" value="input_xy_data">
+<br>
 <input type="button" id="inputxy2" size="10" value="input_xy_data2">
 <br>
 <input type="button" id="sendbtn" size="10" value="websocket">
@@ -182,14 +199,14 @@ https://opensource.org/licenses/mit-license.php-->
 <br>
 <br>
 <label for="camRotX">camRot(X,Y,Z):</label>
-<input type="text" id="camRotX" value="" size="10">
-<input type="text" id="camRotY" value="" size="10">
-<input type="text" id="camRotZ" value="" size="10">
+<input type="text" id="camRotX" value="" style="width:40px;">
+<input type="text" id="camRotY" value="" style="width:40px;">
+<input type="text" id="camRotZ" value="" style="width:40px;">
 <br>
 <label for="camPosX">camPos(X,Y,Z):</label>
-<input type="text" id="camPosX" value="" size="10">
-<input type="text" id="camPosY" value="" size="10">
-<input type="text" id="camPosZ" value="" size="10">
+<input type="text" id="camPosX" value="" style="width:40px;">
+<input type="text" id="camPosY" value="" style="width:40px;">
+<input type="text" id="camPosZ" value="" style="width:40px;">
 <br>
 <label">PlanePosX:</label>
 <!--oninputはtextやrangeに入力があった場合に発火。-->
@@ -391,8 +408,8 @@ document.getElementById("canvas2Y").value=localStorage.getItem("sto_2Y");
 
 
   scene.add(plane);
-  plane.rotation.set(Math.PI*3/2,0,0);
-
+  //床面にする時はxをMath.PI*3/2に
+  plane.rotation.set(0,0,0);
   //外周のフレーム
   geometry = new THREE.CubeGeometry( 1000, 200, 1000 );
   var geo = new THREE.EdgesGeometry( geometry ); // or WireframeGeometry( geometry )
@@ -400,9 +417,9 @@ document.getElementById("canvas2Y").value=localStorage.getItem("sto_2Y");
   wireframe = new THREE.LineSegments( geo, mat );
 
   scene.add( wireframe );
-
-
-
+  //床面にする時はxをMath.PI*3/2に
+  wireframe.rotation.set(Math.PI*3/2,0,0);
+  gridHelper.rotation.set(Math.PI*3/2,0,0);
 
 
 /*//////////////////////距離と高さ計測、レコード機能の為に必須なブロック!!!
@@ -521,7 +538,7 @@ document.getElementById("canvas2Y").value=localStorage.getItem("sto_2Y");
         axesHelper.position.z=document.getElementById('posZ').value;
 
 
-//rotYのrange操作
+//rotZのrange操作
   var rot2=0;
   var targetRot2 = (document.getElementById('rotZ').value) * 180;
   rot2 += (targetRot2 - rot2)* 0.02;
@@ -626,8 +643,9 @@ function pageMove()
     p2z=document.getElementById("txt4").value;
     //z押すと今の値をlocal storageに保存
     localStorage.setItem("num1000",document.getElementById("txt5").value);
+    //床面の時はyをzに
     //計算値を現在のフィールドに
-    document.getElementById("txt5").value=Math.sqrt(Math.pow((p2x-p1x),2)+Math.pow((p2z-p1z),2)).toFixed(2)*kake_value;
+    document.getElementById("txt5").value=Math.sqrt(Math.pow((p2x-p1x),2)+Math.pow((p2y-p1y),2)).toFixed(2)*kake_value;
     //localStorageの値を前フィールドに入力
     document.getElementById("txt50").value=localStorage.getItem("num1000");
     //今のdistanceをコピー
@@ -744,7 +762,8 @@ if ( intersects.length > 0 )
     p2x=document.getElementById("txt3").value;
     p2y=document.getElementById("txt101").value;
     p2z=document.getElementById("txt4").value;
-    document.getElementById("txt5").value=parseInt(Math.sqrt(Math.pow((p2x-p1x),2)+Math.pow((p2z-p1z),2)).toFixed(2)*kake_value);
+    //床面計算の時はp2y,p1yをp2z,p1zに
+    document.getElementById("txt5").value=parseInt(Math.sqrt(Math.pow((p2x-p1x),2)+Math.pow((p2y-p1y),2)).toFixed(2)*kake_value);
     //distance値を表示用にdivのinnerHTMLにコピー
     sanketa=document.getElementById("txt5").value;
     sanketa=("000" + sanketa).slice( -3 );

@@ -8,9 +8,10 @@
 <link rel="stylesheet" href="./style.css"/>
 </head>
 <body>
-<iframe src="index.html" id="frame1" width="1280" height="720" ></iframe>
-<iframe src="indexget.html" id="frame2" width="1280" height="0"></iframe>
-<input type="button" id="kirikae" value="screen chg">
+<iframe src="index.html" id="frame1" width="1280" height="0" ></iframe>
+<iframe src="indexget.html" id="frame2" width="1280" height="720"></iframe>
+<input type="button" id="kirikae" value="screen chg" style="width:100px;">
+<input type="button" id="reload" value="reload" style="width:100px;">
 <div id="ready"></div>
 <style>
       #ready
@@ -40,8 +41,8 @@ var subwin='0px';
 
 var frm1=document.getElementById("frame1");
 var frm2=document.getElementById("frame2");
-frm1.style.height=mainwin;
-frm2.style.height=subwin;
+frm1.style.height=subwin;
+frm2.style.height=mainwin;
 
 //gamen2にkekka innerHTMLをコピー。500ms
 window.onload = function() {
@@ -85,6 +86,10 @@ if (event.keyCode == 32)
 };
 
 
+document.getElementById("reload").addEventListener('click',function()
+  {
+  location.reload();
+  });
 
 
 </script>
