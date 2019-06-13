@@ -51,11 +51,16 @@ window.onload = function()
     setInterval(function()
       {document.getElementById("frame2").contentWindow.document.getElementById("gamen2").innerHTML
       =document.getElementById("frame1").contentWindow.document.getElementById("kekka").innerHTML;
-      if (document.getElementById("frame1").contentWindow.document.getElementById("spaceflg1").innerHTML == 1)
+      if (document.getElementById("frame1").contentWindow.document.getElementById("spaceflg1").innerHTML == 1　&& 
+          document.getElementById("frame2").contentWindow.document.getElementById("calc").style.visibility == "hidden")
            {document.getElementById("ready").innerHTML='ready!!';}else if(document.getElementById("frame2").contentWindow.document.getElementById("calc").style.visibility == "visible")
            {document.getElementById("ready").innerHTML='analyzing...';
            }else
-           {document.getElementById("ready").innerHTML='Hit space key for start!';};
+           {document.getElementById("ready").innerHTML='Hit space key for start!';
+           //10秒数値安定したら自動でデータ消去
+            document.getElementById("frame1").contentWindow.document.getElementById("spaceflg1").innerHTML = 1;
+           };
+
       },500);
   }
 
@@ -86,6 +91,8 @@ document.getElementById("frame2").contentWindow.onkeydown = function(event)
 if (event.keyCode == 32)
  {document.getElementById("frame1").contentWindow.document.getElementById("spaceflg1").innerHTML=1;}
 };
+
+
 
 
 document.getElementById("reload").addEventListener('click',function()

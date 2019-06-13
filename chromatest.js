@@ -10,9 +10,8 @@ var originalCan2Wid=1280;
 var originalCan2Hei=720;
 var flg_chroma;
 
-//測定精度。4で1pixl,64で16pixelごとに検知
+//測定精度。4で全pixel解析,64で16pixelごとに解析
 var seido=8;
-
 
 xx=document.getElementById('canvas2X').value;
 yy=document.getElementById('canvas2Y').value;
@@ -20,54 +19,48 @@ widwid=document.getElementById('canvas2Wid').value;
 heihei=document.getElementById('canvas2Hei').value;
 
 
-
-
 var video2 = document.getElementById('video2');
     // video2は非表示にしておく
     video2.style.display = 'none';
 
-    var canvas2 = document.getElementById('canvas2');
+var canvas2 = document.getElementById('canvas2');
     canvas2.width=originalCan2Wid;
     canvas2.height=originalCan2Hei;
     // そのまま表示すると鏡像にならないので反転させておく
     video2.style.transform = 'rotateY(180deg)';
 
-    var context = canvas2.getContext('2d');
-
+//navigator.getUserMedia(constraints, successCallback, errorCallback);
+var context = canvas2.getContext('2d');
     navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia;
-    navigator.getUserMedia({
+    navigator.getUserMedia(
+{
   video:
   {
-  //明示的にアスペクト比指定しないとfacetimeHDcamは正方形になるから。
-  //aspectRatio: {exact: 1.7777777778},
   optional:[{sourceId:camid}]
   },
   video:
   {
+  //明示的にアスペクト比指定しないとfacetimeHDcamは正方形になるから。
+  //aspectRatio: {exact: 1.7777777778},
   width: originalCan2Wid,height:originalCan2Hei
   },
-  audio: false}, function (stream) {
-        video2.srcObject = stream;
-
+  audio: false
+}, function (stream)
+    {
+    video2.srcObject = stream;
 
         draw();
-
         /*
         if(finresult.length == 0){
         document.getElementById("kekka").style.color="black";
         }else{document.getElementById("kekka").style.color="red";}
         */
-
     }, function () {});
-
-
-
 
 
     // video2の映像をcanvas2に描画する
     var draw = function () {
         context.clearRect(0, 0, originalCan2Wid, originalCan2Hei);
-        //context.drawImage(video2,500,500,100,200,500,500,100,200);
         context.drawImage(video2,xx,yy,widwid,heihei,xx,yy,widwid,heihei);
         // ここでクロマキー処理をする
         chromaKey();
@@ -75,8 +68,8 @@ var video2 = document.getElementById('video2');
         if(j== null){return}
         //jは透明でない、一番小さいピクセル番号
        document.getElementById("res").innerHTML=j;
-       //透明でないピクセル番号をx,yスクリーン座標に変換
-        /*d
+       //透明でないaのピクセル番号をx,yスクリーン座標に変換
+       /*
        k:0から始まるpixel番号、j:透明でないa番号
        xはk/(canvas2.width + 1)の余り
        yはk/(canvas2.width + 1)の商
@@ -90,7 +83,7 @@ var video2 = document.getElementById('video2');
 
         if(flg_chroma == 1)
         {
-        //spaceで配列空にするパターンの時は下記不要
+        //spaceで配列空にするパターンの時は下記不要。自動タイムアウトで空にする場合必要。
         //setTimeout(function(){finresult.length=0},8000);
         //flg_chroma=0;
          }
@@ -117,15 +110,11 @@ sto_col_val = sto_col_val.replace(/^#/, '');
 
 
 
-
-
-
     // クロマキー処理
     var chromaKey = function ()
     {
         var imageData = context.getImageData(xx,yy,widwid,heihei);
-            data = imageData.data; //参照渡し
-
+            data = imageData.data;
         // dataはUint8ClampedArray
         // 長さはcanvas2の width * height * 4(r,g,b,a)
         // 先頭から、一番左上のピクセルのr,g,b,aの値が順に入っており、
@@ -142,12 +131,13 @@ sto_col_val = sto_col_val.replace(/^#/, '');
 
             // chromaKeyColorと現在のピクセルの三次元空間上の距離を閾値と比較する
             // 閾値より小さい（色が近い）場合、そのピクセルを消す
-            if (getColorDistance(chromaKeyColor, target) < colorDistance) {
-                // alpha値を0にすることで見えなくする
+            if (getColorDistance(chromaKeyColor, target) < colorDistance)
+              {
+                // alpha値0で消す
                 data[i + 3] = 0;
-            }
+              }
             else
-            {
+              {
             finresult.push(i);
             j=finresult.reduce((a,b)=>Math.min(a,b));
             flg_chroma=1;
@@ -157,24 +147,16 @@ sto_col_val = sto_col_val.replace(/^#/, '');
                 {setTimeout(function()
                 {finresult.length=0},5000);}
                 */
-
             //jは透明でない最小のpixel番号
-            //console.log(finresult.length);
-            }
-            /*var j=finresult.reduce((a,b)=>Math.min(a,b));
-            finresult2.push(j);
-            var k=finresult2.join(',');
-            console.log(k); */
+              }
         }
-
-           //finresult.push(i);
-           //console.log(finresult.reduce((a,b)=>Math.min(a,b)));
 
         context.putImageData(imageData,xx,yy);
     };
 
     // r,g,bというkeyを持ったobjectが第一引数と第二引数に渡される想定
-    var getColorDistance = function (rgb1, rgb2) {
+    var getColorDistance = function (rgb1, rgb2)
+    {
         // 三次元空間の距離が返る
         return Math.sqrt(
             Math.pow((rgb1.r - rgb2.r), 2) +
@@ -185,12 +167,10 @@ sto_col_val = sto_col_val.replace(/^#/, '');
 
     var color = document.getElementById('color');
 
-
     color.addEventListener('change', function () {
         // フォームの値は16進カラーコードなのでrgb値に変換する
         chromaKeyColor = color2rgb(this.value);
     });
-
        var color2rgb = function (color) {
         color = color.replace(/^#/, '');
         return {
@@ -201,9 +181,6 @@ sto_col_val = sto_col_val.replace(/^#/, '');
     };
 
 
-
-
-
 //text要素はcanvas2Wid,canvas2Hei,canvas2X,canvas2Y
 
     var distance = document.getElementById('distance');
@@ -212,13 +189,13 @@ sto_col_val = sto_col_val.replace(/^#/, '');
         colorDistance = this.value;
     });
 
-//canvasの縦横、位置をUIで変化させる。
-
-
-    document.getElementById("mask").addEventListener('click', function () {
-        xx=document.getElementById("canvas2X").value;
-        yy=document.getElementById("canvas2Y").value;
-        widwid=document.getElementById("canvas2Wid").value;
-        heihei=document.getElementById("canvas2Hei").value;
+//canvasの縦横、位置をUIで変化させる
+    document.getElementById("mask").addEventListener('click', function()
+    {
+    xx=document.getElementById("canvas2X").value;
+    yy=document.getElementById("canvas2Y").value;
+    widwid=document.getElementById("canvas2Wid").value;
+    heihei=document.getElementById("canvas2Hei").value;
     });
+
 

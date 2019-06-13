@@ -148,7 +148,7 @@ const observer3 = new MutationObserver((mutations) =>
  {
     elem3arry.push(parseInt(elem3.innerHTML));
 
-//以下6つの数字が揃ったら定常状態とみなし、解析完了。つまり10秒
+//以下6つの数字が揃ったら定常状態とみなし、解析完了。7秒くらい
 var a1=elem3arry[elem3arry.length-2];
 var a2=elem3arry[elem3arry.length-1];
 var a3=elem3arry[elem3arry.length-6];
@@ -214,6 +214,8 @@ observer3.observe(elem3, config3);
     randomVal=("000" + randomVal).slice( -3 );
     calc.innerHTML=randomVal;
    },60);
+
+
 
 
 /*
