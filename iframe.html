@@ -8,8 +8,8 @@
 <link rel="stylesheet" href="./style.css"/>
 </head>
 <body>
-<iframe src="index.html" id="frame1" width="1280" height="0" ></iframe>
-<iframe src="indexget.html" id="frame2" width="1280" height="720"></iframe>
+<iframe src="index.html" id="frame1" width="1280" height="0" name="fone"></iframe>
+<iframe src="index2.html" id="frame2" width="1280" height="720" name="ftwo"></iframe>
 <input type="button" id="kirikae" value="screen chg" style="width:100px;">
 <input type="button" id="reload" value="reload" style="width:100px;">
 <div id="ready"></div>
@@ -20,8 +20,8 @@
     display: flex;
     align-items: center; /* 縦方向中央揃え */
     justify-content: center; /* 横方向中央揃え */
-    width: 400px;   /*横幅*/
-    height: 100px;  /*縦幅*/
+    width: 400px;
+    height: 100px;
     top:95%;
     left:65%;
     font-size:40px;
@@ -45,18 +45,19 @@ frm1.style.height=subwin;
 frm2.style.height=mainwin;
 
 //gamen2にkekka innerHTMLをコピー。500ms
-window.onload = function() {
+window.onload = function()
+  {
+
     setInterval(function()
-      {document.getElementById("frame2").contentWindow.document.getElementById("gamen2").innerHTML=document.getElementById("frame1").contentWindow.document.getElementById("kekka").innerHTML;
+      {document.getElementById("frame2").contentWindow.document.getElementById("gamen2").innerHTML
+      =document.getElementById("frame1").contentWindow.document.getElementById("kekka").innerHTML;
       if (document.getElementById("frame1").contentWindow.document.getElementById("spaceflg1").innerHTML == 1)
-           {document.getElementById("ready").innerHTML='ready!!';}else
+           {document.getElementById("ready").innerHTML='ready!!';}else if(document.getElementById("frame2").contentWindow.document.getElementById("calc").style.visibility == "visible")
+           {document.getElementById("ready").innerHTML='analyzing...';
+           }else
            {document.getElementById("ready").innerHTML='Hit space key for start!';};
       },500);
-
   }
-//doc2.getElementById("final_value").innerHTML=doc.getElementById("kekka").innerHTML;
-
-
 
 document.getElementById("kirikae").addEventListener('click',function()
 	{
@@ -69,8 +70,9 @@ document.getElementById("kirikae").addEventListener('click',function()
       frm1.style.height=mainwin;
       frm2.style.height=subwin;
       }
+      document.getElementById("kirikae").blur()
+      top.ftwo.focus();
 	});
-
 
 document.getElementById("frame1").contentWindow.onkeydown = function(event)
 {
@@ -91,6 +93,7 @@ document.getElementById("reload").addEventListener('click',function()
   location.reload();
   });
 
+  top.ftwo.focus();
 
 </script>
 </body>

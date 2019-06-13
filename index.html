@@ -37,12 +37,10 @@ plane.rotation.set(0,0,0);
       #canvas2
       {
         position:fixed;
-
         z-index:4;
       }
       #video2
       {
-
         left:0px;
         position:fixed;
         width: 1280px;
@@ -57,7 +55,6 @@ plane.rotation.set(0,0,0);
         height: 720px;
         z-index:1;
       }
-
       #div1
       {
         position:fixed;
@@ -81,6 +78,7 @@ plane.rotation.set(0,0,0);
         position:fixed;
         z-index:8;
       }
+
     </style>
  <script src="./js/three.min.js" ></script>
  <!--script src="./js/OrbitControls.js"></script-->
@@ -92,22 +90,22 @@ plane.rotation.set(0,0,0);
     <div id="col_dis">
         <input id="color" type="color" value="#00ff00" />
         <input id="distance" type="number" value="500" style="width:35px;"/>
-        <input id="canvas2Wid" type="text"  style="width:35px;"/>
-        <input id="canvas2Hei" type="text"  style="width:35px;"/>
-        <input id="canvas2X" type="text"  style="width:35px;"/>
-        <input id="canvas2Y" type="text"  style="width:35px;"/>
+
+        <input id="canvas2Wid" type="text" onkeyup="this.nextSibling.value = this.value" style="width:35px;"/><input type="range" oninput="this.previousSibling.value = this.value" min="0" max="1280" step="1" style="width:70px"/>
+        <input id="canvas2Hei" type="text" onkeyup="this.nextSibling.value = this.value" style="width:35px;"/><input type="range" oninput="this.previousSibling.value = this.value" min="0" max="720" step="1" style="width:70px"/>
+        <input id="canvas2X" type="text" onkeyup="this.nextSibling.value = this.value" style="width:35px;"/><input type="range" oninput="this.previousSibling.value = this.value" min="0" max="1280" step="1" style="width:70px"/>
+        <input id="canvas2Y" type="text" onkeyup="this.nextSibling.value = this.value" style="width:35px;"/><input type="range" oninput="this.previousSibling.value = this.value" min="0" max="720" step="1" style="width:70px"/>
+
         <input id="mask" type="button" value="mask" style="width:40px;"/>
-        <br>
         <span id="res">result</span>
     </div>
-        <div id="bg">
+    <div id="bg">
         <video id="video2" autoplay></video>
         <canvas id="canvas2"></canvas>
     </div>
 
 <!--three.jsのレイヤー-->
 <div id="cv"></div>
-<!--onclick="mouse(event)"-->
 <video id="myVideo" preload autoplay muted style="display:none"></video >
 <!--visibility:hidden-->
 
@@ -130,14 +128,12 @@ plane.rotation.set(0,0,0);
 <br>
 <label for="txt5">distance:&nbsp;&nbsp;&nbsp;&nbsp;</label>
 <input type="text" id="txt5" class="txt55" style="width:40px;">
+<!--前のdistance-->
+<input type="text" id="txt50" size="7" >
 <br>
 <input type="button" id="btn1" value="plane_on" style="width:70px;">
 <input type="button" id="btn2" value="plane_off" style="width:70px;">
 &nbsp;&nbsp;
-<!--前のdistance-->
-<input type="text" id="txt50" size="7" >
-<!--今のdistanceコピー-->
-<!--input type="text" id="txt60" class="txt60c" name="txt60n" size="7" value="ccc"-->
 <br>
 <label for="txt10" >point3(x)_x:</label>
 <input type="text" id="txt10" style="width:40px;">
@@ -150,8 +146,11 @@ plane.rotation.set(0,0,0);
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 <input type="text" id="txt13" style="width:40px;">
 <br>
-<label for="txt6">multi_para:</label>
+<label for="kake">multi_para:</label>
 <input type="text" id="kake" value="1" style="width:40px;" class="kake">
+<br>
+<label for="offset">offset:</label>
+<input type="text" id="offset" value="0" style="width:40px;">
 <br>
 <input type="button" id="conf" value="save_conf" size="10">
 
@@ -160,8 +159,8 @@ plane.rotation.set(0,0,0);
 <br>
 <div id="analyz_p2x" size="10"></div>
 <div id="analyz_p2y" size="10"></div>
-
 <br>
+<!--スクリーン座標テスト入力項目-->
 <input type="button" id="inputxy" size="10" value="input_xy_data">
 <br>
 <input type="button" id="inputxy2" size="10" value="input_xy_data2">
@@ -171,7 +170,7 @@ plane.rotation.set(0,0,0);
 <br>
 <br>
 <br>
-<div  id="kekka" style="font-size:100px;"></div>
+<div id="kekka" style="font-size:80px;"></div>
 <div id="spaceflg1"></div>
 </div>
 
@@ -212,7 +211,7 @@ plane.rotation.set(0,0,0);
 <!--oninputはtextやrangeに入力があった場合に発火。-->
 <input type="range" id="posX" value="0" min="-1000" max="1000" step="1"
   oninput="document.getElementById('output11').value=this.value">
-  <output id="output11">0</output>
+<output id="output11">0</output>
 <br>
 <label">PlanePosY:</label>
 <input type="range" id="posY" value="0" min="-1000" max="1000" step="1"
@@ -234,10 +233,10 @@ plane.rotation.set(0,0,0);
   oninput="document.getElementById('output4').value=this.value">
   <output id="output4">0</output>
 <br>
-<label">CamRotZ:</label>
+<!--label">CamRotZ:</label>
 <input type="range" id="rotZ" value="0" min="-25" max="25" step="1"
   oninput="document.getElementById('output1000').value=this.value">
-  <output id="output1000">0</output>
+  <output id="output1000">0</output-->
 <br>
 <label">fov:</label>
 <input type="range" id="fov" value="60" min="1" max="200" step="1"
@@ -245,8 +244,6 @@ plane.rotation.set(0,0,0);
   <output id="outputFov">60</output>
 &nbsp;&nbsp;&nbsp;&nbsp;
 <input type="button" id="default" value="default" size="10">
-
-<!--input type="checkbox" id="check"-->
 </div>
 <script>
 
@@ -267,7 +264,7 @@ var camid='40bc8bffbbeb5a97e7c873435d0013828f67a0b150045b5f293cc86f2fe17d26'
 var fov;
 var aspect = width / height;
 var near   = 1;
-var far    = 2500;
+var far    = 2000;
 var canvas;
 var wireframe;
 var directionalLight;
@@ -298,6 +295,7 @@ var sanketa;
 init();
 animate();
 
+//console.log(document.getElementById("canvas2Wid").previousSibling)
 
  document.getElementById("fileid").onchange=function(evt)
  {
@@ -518,7 +516,7 @@ document.getElementById("canvas2Y").value=localStorage.getItem("sto_2Y");
 
         document.getElementById("camRotX").value=camera.rotation.x.toFixed(2);
         document.getElementById("camRotY").value=camera.rotation.y.toFixed(2);
-        document.getElementById("camRotZ").value=camera.rotation.z.toFixed(2);
+        //document.getElementById("camRotZ").value=camera.rotation.z.toFixed(2);
 
         document.getElementById("camPosX").value=camera.position.x.toFixed(2);
         document.getElementById("camPosY").value=camera.position.y.toFixed(2);
@@ -536,14 +534,13 @@ document.getElementById("canvas2Y").value=localStorage.getItem("sto_2Y");
         gridHelper.position.z=document.getElementById('posZ').value;
         plane.position.z=document.getElementById('posZ').value;
         axesHelper.position.z=document.getElementById('posZ').value;
-
-
+/*
 //rotZのrange操作
   var rot2=0;
   var targetRot2 = (document.getElementById('rotZ').value) * 180;
   rot2 += (targetRot2 - rot2)* 0.02;
   var radian2 = rot2 * Math.PI / 180;
-
+*/
 //rotYのrange操作
   var rot1=0;
   var targetRot1 = (document.getElementById('rotX').value) * 180;
@@ -551,24 +548,19 @@ document.getElementById("canvas2Y").value=localStorage.getItem("sto_2Y");
   var radian1 = (rot1-180) * Math.PI / 180;
 
 //rotXのrange操作
-  var rot=0; // 角度
+  var rot=0;
   var targetRot = (document.getElementById('rotY').value) * 180;
-  // イージングの公式を用いて滑らかにする
-  // 値 += (目標値 - 現在の値) * 減速値
+  // イージングの公式。値 += (目標値 - 現在の値) * 減速値
   rot += (targetRot - rot)* 0.02;
-  // ラジアンに変換する
+  // ラジアン変換
   var radian = rot * Math.PI / 180;
   // 角度に応じてカメラの位置を設定
   camera.position.x = -1000 * Math.cos(radian)*Math.cos(radian1);
   camera.position.y = 1000 * Math.sin(radian);
   camera.position.z = 1000 * Math.cos(radian)*Math.sin(radian1);
-  //console.log(a);
-
   camera.lookAt(new THREE.Vector3(0,0,0));
   //animateの括弧
     }
-
-
 
 
 document.getElementById("cv").addEventListener('click',function(event)
@@ -576,21 +568,22 @@ document.getElementById("cv").addEventListener('click',function(event)
 
 objects = [];
 
-if(flg==1){
+if(flg==1)
+ {
 //生成されたplane
 objects.push(planeMesh);
-}else
-{
+ }else
+ {
 //床面
 objects.push(plane);
-}
+ }
 //event.target はイベントが発生した要素
 //event.currentTarget はイベントリスナをセットした要素を指す。
 //このケースではonmousemoveがついているcv div。
     var element = event.currentTarget;
 
     // スクリーン上のマウス位置を取得する
-    //currentTargetとoffset,elementじゃないとレイずれる
+    //currentTargetとoffsetじゃないとレイずれる
     var mouseX = event.clientX - element.offsetLeft;
     var mouseY = event.clientY - element.offsetTop;
     // offsetは「width」「padding」「border」を足したピクセル単位の数値
@@ -599,7 +592,7 @@ objects.push(plane);
     //console.log(mouseX);
     //console.log(mouseY);
 
-    // 取得したスクリーン座標を-1〜1に正規化する（WebGLは-1〜1で座標が表現される）
+    // 取得したスクリーン座標を-1〜1に正規化する（WebGLは-1〜1で座標を表現）
     ms.x =  (mouseX/w)  * 2 - 1;
     ms.y = -(mouseY/h) * 2 + 1;
 
@@ -643,13 +636,17 @@ function pageMove()
     p2z=document.getElementById("txt4").value;
     //z押すと今の値をlocal storageに保存
     localStorage.setItem("num1000",document.getElementById("txt5").value);
-    //床面の時はyをzに
-    //計算値を現在のフィールドに
-    document.getElementById("txt5").value=Math.sqrt(Math.pow((p2x-p1x),2)+Math.pow((p2y-p1y),2)).toFixed(2)*kake_value;
-    //localStorageの値を前フィールドに入力
+    //床面の時はyをzに変更。計算値を現在のフィールドに
+    document.getElementById("txt5").value
+    =Math.sqrt(Math.pow((p2x-p1x),2)+Math.pow((p2y-p1y),2)).toFixed(2)*kake_value;
+
+    //distance値を表示用にdivのinnerHTMLにコピー
+    document.getElementById("kekka").innerHTML
+    =parseInt(document.getElementById("txt5").value)+ parseInt(document.getElementById("offset").value);
+    //localStorageの値を以前の値フィールドに入力
     document.getElementById("txt50").value=localStorage.getItem("num1000");
-    //今のdistanceをコピー
-　　localStorage.setItem("num1001",document.getElementById("txt5").value);
+    /*今のdistanceをコピー
+　　localStorage.setItem("num1001",document.getElementById("txt5").value);*/
   }
     if (event.keyCode == 88)  //「x」が押されたか確認
   {
@@ -685,25 +682,17 @@ function pageMove()
    a = ((y1 - y2) * (x1 - x3) - (y1 - y3) * (x1 - x2)) / ((x1 - x2) * (x1 - x3) * (x2 - x3));
    b = (y1-y2)/(x1-x2)-a*(parseFloat(x1) + parseFloat(x2));
 　 c = y1-a*x1*x1-b*x1;
-
-  //2次関数の頂点を求める公式。p1y引くのは平面のy値を0以外にした場合のための措置。
+  //2次関数の頂点を求める公式。p1y引くのは平面のy値を0以外にした場合のための措置。オフセットを引いている。
 　 document.getElementById("txt13").value= ((parseFloat(-b*b) + parseFloat(4*a*c))/(4*a)-p1y)*kake_value;
   }
-
-
-
-
-
 
   //pagemoveの括弧
  }
 
 
 
-
 /////////////////////////////////
 //p1 analyzあり
-//document.getElementById("analyz_p1y").oninput=
 function ana1()
 {
 objects = [];
@@ -763,11 +752,12 @@ if ( intersects.length > 0 )
     p2y=document.getElementById("txt101").value;
     p2z=document.getElementById("txt4").value;
     //床面計算の時はp2y,p1yをp2z,p1zに
-    document.getElementById("txt5").value=parseInt(Math.sqrt(Math.pow((p2x-p1x),2)+Math.pow((p2y-p1y),2)).toFixed(2)*kake_value);
+    document.getElementById("txt5").value
+    =parseInt(Math.sqrt(Math.pow((p2x-p1x),2)+Math.pow((p2y-p1y),2)).toFixed(2)*kake_value);
     //distance値を表示用にdivのinnerHTMLにコピー
     sanketa=document.getElementById("txt5").value;
     sanketa=("000" + sanketa).slice( -3 );
-    document.getElementById("kekka").innerHTML=sanketa;
+    document.getElementById("kekka").innerHTML=parseInt(sanketa) + parseInt(document.getElementById("offset").value);
 //ファイル送信
 /*
 var json_obj=
@@ -819,7 +809,6 @@ console.log(json_origin);
   scene.add(planeMesh);
   }
 
-
   document.getElementById("btn2").onclick=function eraPlane()
   {
   flg=0;
@@ -836,7 +825,6 @@ console.log(json_origin);
     p3z=document.getElementById("txt12").value=0;
     document.getElementById("txt13").value=0;
   }
-
 
 //recorder
   document.getElementById("stt").addEventListener('click', function(ev){
@@ -879,7 +867,6 @@ console.log(json_origin);
   })
 
 
-
 //localstorage保存
 document.getElementById("conf").addEventListener('click', function(ev)
    {
@@ -911,8 +898,6 @@ document.getElementById("conf").addEventListener('click', function(ev)
     localStorage.setItem("sto_2Hei",document.getElementById("canvas2Hei").value);
     localStorage.setItem("sto_2X",document.getElementById("canvas2X").value);
     localStorage.setItem("sto_2Y",document.getElementById("canvas2Y").value);
-
-
 
 
    });
@@ -954,7 +939,7 @@ document.getElementById("inputxy2").addEventListener('click', function(ev)
 
 
 
-/** 監視対象の要素オブジェクト */
+/** 監視対象の要素オブジェクト analyz_p1y監視でana1()発動*/
 const elem = document.getElementById("analyz_p1y");
 const observer = new MutationObserver((mutations) => {
     mutations.forEach((mutation) => {
@@ -975,10 +960,6 @@ observer.observe(elem, config);
 
 
 
-
-
-
-
 /** 監視対象の要素オブジェクト */
 const elem2 = document.getElementById("analyz_p2y");
 const observer2 = new MutationObserver((mutations) =>
@@ -990,26 +971,21 @@ const observer2 = new MutationObserver((mutations) =>
     });
 //監視の終了括弧
 });
-
-
 /** 監視時のオプション */
 const config2 = {
   attributes: true,
   childList: true,
-  //characterData: true,
-  //attributeOldValue: true,
-  //characterDataOldValue: true
 };
-/** 要素の変化監視をスタート */
 observer2.observe(elem2, config2);
+
 
 
 /*
 //ajax
 var xhr = new XMLHttpRequest();
-xhr.open("GET", 'indexget.html?param=' + document.getElementById("txt5").value,true);
+xhr.open("GET", 'index2.html?param=' + document.getElementById("txt5").value,true);
 xhr.send();
-//'indexget.html?param=aaa' + 'param=' + document.getElementById("txt5").value,true
+//'index2.html?param=aaa' + 'param=' + document.getElementById("txt5").value,true
 xhr.onreadystatechange = function()
 {
 //0 準備段階  まだ通信は行われていない状態

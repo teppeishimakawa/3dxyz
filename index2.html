@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"/>
-<link rel="stylesheet" href="animate.min.css">
+<!--link rel="stylesheet" href="animate.min.css"-->
 </head>
 <body>
 <div id="bg" ></div>
@@ -12,9 +12,7 @@
 <!--class="animated  rubberBand"-->
 <div id="gamen2niketa" ></div>
 <div id="gamen2sanketa" ></div>
-
 <div id="calc"></div>
-<!--div id="spacefng2"></div-->
 
 <style>
 html,body
@@ -27,8 +25,8 @@ html,body
     display: flex;
     align-items: center; /* 縦方向中央揃え */
     justify-content: center; /* 横方向中央揃え */
-    width: 600px;   /*横幅*/
-    height: 400px;  /*縦幅*/
+    width: 600px;
+    height: 400px;
     background-color:#8fbc8f;
     top:25%;
     left:25%;
@@ -46,8 +44,8 @@ html,body
     display: flex;
     align-items: center; /* 縦方向中央揃え */
     justify-content: center; /* 横方向中央揃え */
-    width: 600px;   /*横幅*/
-    height: 400px;  /*縦幅*/
+    width: 600px;
+    height: 400px;
     top:25%;
     left:33%;
     font-size:200px;
@@ -65,10 +63,10 @@ html,body
       {
     position:absolute;
     display: flex;
-    align-items: center; /* 縦方向中央揃え */
-    justify-content: center; /* 横方向中央揃え */
-    width: 600px;   /*横幅*/
-    height: 400px;  /*縦幅*/
+    align-items: center;
+    justify-content: center;
+    width: 600px;
+    height: 400px;
     top:25%;
     left:25%;
     font-size:200px;
@@ -84,10 +82,10 @@ html,body
       {
     position:absolute;
     display: flex;
-    align-items: center; /* 縦方向中央揃え */
-    justify-content: center; /* 横方向中央揃え */
-    width: 600px;   /*横幅*/
-    height: 400px;  /*縦幅*/
+    align-items: center;
+    justify-content: center;
+    width: 600px;
+    height: 400px;
     top:25%;
     left:17%;
     font-size:200px;
@@ -96,17 +94,16 @@ html,body
     -webkit-text-stroke: 1px #000;
     text-stroke: 1px #000;
     text-shadow: 5px 5px 15px #999999;
-
       }
 
       #bg
       {
     position:absolute;
     display: flex;
-    align-items: center; /* 縦方向中央揃え */
-    justify-content: center; /* 横方向中央揃え */
-    width: 600px;   /*横幅*/
-    height: 400px;  /*縦幅*/
+    align-items: center;
+    justify-content: center;
+    width: 600px;
+    height: 400px;
     background-color:#8fbc8f;
     top:25%;
     left:25%;
@@ -122,10 +119,10 @@ html,body
       {
     position:absolute;
     display: flex;
-    align-items: center; /* 縦方向中央揃え */
-    justify-content: center; /* 横方向中央揃え */
-    width: 600px;   /*横幅*/
-    height: 400px;  /*縦幅*/
+    align-items: center;
+    justify-content: center;
+    width: 600px;
+    height: 400px;
     background-color:#8fbc8f;
     top:25%;
     left:25%;
@@ -136,23 +133,22 @@ html,body
     text-stroke: 1px #000;
     text-shadow: 5px 5px 15px #999999;
       }
-
 </style>
+
+
 <script type="text/javascript">
-  //gamen2の数値変化監視
+
 var elem3 = document.getElementById("gamen2");
 var elem3arry=[];
 var flgcalc;
+    //gamen2の数値変化監視
+const observer3 = new MutationObserver((mutations) =>
+{
+    mutations.forEach((mutation) =>
+ {
+    elem3arry.push(parseInt(elem3.innerHTML));
 
-const observer3 = new MutationObserver((mutations) => {
-    mutations.forEach((mutation) => {
-        //console.log(mutation.target);
-
-
-        elem3arry.push(parseInt(elem3.innerHTML));
-        //console.log(elem3arry);
-
-
+//以下6つの数字が揃ったら定常状態とみなし、解析完了。つまり10秒
 var a1=elem3arry[elem3arry.length-2];
 var a2=elem3arry[elem3arry.length-1];
 var a3=elem3arry[elem3arry.length-6];
@@ -160,9 +156,7 @@ var a4=elem3arry[elem3arry.length-5];
 var a5=elem3arry[elem3arry.length-10];
 var a6=elem3arry[elem3arry.length-9];
 
-
 var calc = document.getElementById("calc");
-
 
 var first=document.getElementById("gamen2hitoketa");
 var second=document.getElementById("gamen2niketa");
@@ -173,42 +167,30 @@ second.innerHTML=elem3.innerHTML.slice(1,2); //2桁目
 third.innerHTML=elem3.innerHTML.slice(0,1); //3桁目
 
 
-
 //数値が落ち着いたら表示する
          if((a1 == a2) && (a2 == a3)&& (a3 == a4) && (a4 == a5)&& (a5 == a6) 
           && (typeof a3 !== "undefined") && (typeof a4 !== "undefined") 
           && (typeof a5 !== "undefined") && (typeof a6 !== "undefined"))
           {
-          calc.style.visibility="hidden"
+           calc.style.visibility="hidden"
            first.style.visibility="visible";
            setTimeout(function(){second.style.visibility="visible";},400);
            setTimeout(function(){third.style.visibility="visible";},800);
-           //console.log("visible");
-          }else{
+          }else
+          {
            first.style.visibility="hidden";
            second.style.visibility="hidden";
            third.style.visibility="hidden";
-           //console.log("hidden");
-
            calc.style.visibility="visible"
-
           }
-
           if(elem3arry.length == 50)
           {
           elem3arry.shift();
           }
 
-/*
-　　　　　　console.log(a1);
-          console.log(a2);
-           console.log(a3);
-           console.log(a4);
-           console.log(a5);
-           console.log(a6);
-*/
-
+//mutationの括弧
     });
+//observer3の括弧
 });
 /** 監視時のオプション */
 const config3 = {
@@ -222,16 +204,16 @@ const config3 = {
 observer3.observe(elem3, config3);
 
 
+//解析中のランダム数字生成
+  var min = 1 ;
+  var max = 200 ;
 
-           var min = 1 ;
-           var max = 200 ;
-
-           setInterval(function()
-           {
-            var randomVal = Math.floor( Math.random() * (max + 1 - min) ) + min ;
-            randomVal=("000" + randomVal).slice( -3 );
-            calc.innerHTML=randomVal;
-           },60);
+   setInterval(function()
+   {
+    var randomVal = Math.floor( Math.random() * (max + 1 - min) ) + min ;
+    randomVal=("000" + randomVal).slice( -3 );
+    calc.innerHTML=randomVal;
+   },60);
 
 
 /*
@@ -245,7 +227,6 @@ xhr.onreadystatechange = function() {
     }
 }
 */
-
 </script>
 </body>
 </html>
