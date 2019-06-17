@@ -79,6 +79,11 @@ plane.rotation.set(0,0,0);
         z-index:8;
       }
 
+      #qua_font
+      {
+      font-size:6px;
+      }
+
     </style>
  <script src="./js/three.min.js" ></script>
  <!--script src="./js/OrbitControls.js"></script-->
@@ -91,12 +96,14 @@ plane.rotation.set(0,0,0);
         <input id="color" type="color" value="#00ff00" />
         <input id="distance" type="number" value="500" style="width:35px;"/>
 
-        <input id="canvas2Wid" type="text" onkeyup="this.nextSibling.value = this.value" style="width:35px;"/><input type="range" oninput="this.previousSibling.value = this.value" min="0" max="1280" step="1" style="width:70px"/>
-        <input id="canvas2Hei" type="text" onkeyup="this.nextSibling.value = this.value" style="width:35px;"/><input type="range" oninput="this.previousSibling.value = this.value" min="0" max="720" step="1" style="width:70px"/>
-        <input id="canvas2X" type="text" onkeyup="this.nextSibling.value = this.value" style="width:35px;"/><input type="range" oninput="this.previousSibling.value = this.value" min="0" max="1280" step="1" style="width:70px"/>
-        <input id="canvas2Y" type="text" onkeyup="this.nextSibling.value = this.value" style="width:35px;"/><input type="range" oninput="this.previousSibling.value = this.value" min="0" max="720" step="1" style="width:70px"/>
+        <input id="canvas2Wid" type="text" onkeyup="this.nextSibling.value = this.value" style="width:30px;"/><input type="range" oninput="this.previousSibling.value = this.value" min="0" max="1280" step="1" style="width:110px"/>
+        <input id="canvas2Hei" type="text" onkeyup="this.nextSibling.value = this.value" style="width:30px;"/><input type="range" oninput="this.previousSibling.value = this.value" min="0" max="720" step="1" style="width:80px"/>
+        <input id="canvas2X" type="text" onkeyup="this.nextSibling.value = this.value" style="width:30px;"/><input type="range" oninput="this.previousSibling.value = this.value" min="0" max="1280" step="1" style="width:110px"/>
+        <input id="canvas2Y" type="text" onkeyup="this.nextSibling.value = this.value" style="width:30px;"/><input type="range" oninput="this.previousSibling.value = this.value" min="0" max="720" step="1" style="width:80px"/>
 
         <input id="mask" type="button" value="mask" style="width:40px;"/>
+        <label id="qua_font">qc(4-)</label>
+        <input id="quality" type="text" value="8" style="width:20px;"/>
         <span id="res">result</span>
     </div>
     <div id="bg">
@@ -351,6 +358,7 @@ document.getElementById("canvas2Hei").value=localStorage.getItem("sto_2Hei");
 document.getElementById("canvas2X").value=localStorage.getItem("sto_2X");
 document.getElementById("canvas2Y").value=localStorage.getItem("sto_2Y");
 
+document.getElementById("quality").value=localStorage.getItem("sto_qua");
 
   //document.getElementById("txt60").innerHTML=localStorage.getItem("num1001");
 
@@ -647,6 +655,7 @@ function pageMove()
     document.getElementById("txt50").value=localStorage.getItem("num1000");
     /*今のdistanceをコピー
 　　localStorage.setItem("num1001",document.getElementById("txt5").value);*/
+
   }
     if (event.keyCode == 88)  //「x」が押されたか確認
   {
@@ -899,6 +908,7 @@ document.getElementById("conf").addEventListener('click', function(ev)
     localStorage.setItem("sto_2X",document.getElementById("canvas2X").value);
     localStorage.setItem("sto_2Y",document.getElementById("canvas2Y").value);
 
+    localStorage.setItem("sto_qua",document.getElementById("quality").value);
 
    });
 

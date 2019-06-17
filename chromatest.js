@@ -198,4 +198,8 @@ sto_col_val = sto_col_val.replace(/^#/, '');
     heihei=document.getElementById("canvas2Hei").value;
     });
 
-
+//canvasの縦横、位置をUIで変化させる
+    document.getElementById("quality").addEventListener('change', function()
+    {
+    seido=parseInt(document.getElementById("quality").value);
+    });
