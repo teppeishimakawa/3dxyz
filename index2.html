@@ -13,7 +13,9 @@
 <div id="gamen2niketa" ></div>
 <div id="gamen2sanketa" ></div>
 <div id="calc"></div>
-
+<img src="./img/kaeru.png" id="img1" class="img" style="visibility:hidden" >
+<img src="./img/usagi.png" id="img2" class="img" style="visibility:hidden" >
+<img src="./img/kangaru.png" id="img3" class="img" style="visibility:hidden" >
 <style>
 html,body
 {
@@ -133,6 +135,21 @@ html,body
     text-stroke: 1px #000;
     text-shadow: 5px 5px 15px #999999;
       }
+
+      .img
+      {
+    position:absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 200px;
+    height: 200px;
+    top:50%;
+    left:77%;
+    -webkit-text-stroke: 1px #000;
+    text-stroke: 1px #000;
+    text-shadow: 5px 5px 15px #999999;
+      }
 </style>
 
 
@@ -176,12 +193,30 @@ third.innerHTML=elem3.innerHTML.slice(0,1); //3桁目
            first.style.visibility="visible";
            setTimeout(function(){second.style.visibility="visible";},400);
            setTimeout(function(){third.style.visibility="visible";},800);
+
+           if(parseInt(elem3.innerHTML) < 180){
+            document.getElementById("img1").style.visibility="visible"
+            document.getElementById("img2").style.visibility="hidden"
+            document.getElementById("img3").style.visibility="hidden"}
+           else if(180 < parseInt(elem3.innerHTML) && parseInt(elem3.innerHTML) < 210){
+            document.getElementById("img1").style.visibility="hidden"
+            document.getElementById("img2").style.visibility="visible"
+            document.getElementById("img3").style.visibility="hidden"}
+           else{
+            document.getElementById("img1").style.visibility="hidden"
+            document.getElementById("img2").style.visibility="hidden"
+            document.getElementById("img3").style.visibility="visible"
+               };
+
           }else
           {
            first.style.visibility="hidden";
            second.style.visibility="hidden";
            third.style.visibility="hidden";
            calc.style.visibility="visible"
+           document.getElementById("img1").style.visibility="hidden";
+           document.getElementById("img2").style.visibility="hidden";
+           document.getElementById("img3").style.visibility="hidden";
           }
           if(elem3arry.length == 50)
           {
