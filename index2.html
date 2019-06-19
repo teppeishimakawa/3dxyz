@@ -16,6 +16,7 @@
 <img src="./img/kaeru.png" id="img1" class="img" style="visibility:hidden" >
 <img src="./img/usagi.png" id="img2" class="img" style="visibility:hidden" >
 <img src="./img/kangaru.png" id="img3" class="img" style="visibility:hidden" >
+<!--div id="kyuu"></div-->
 <style>
 html,body
 {
@@ -144,8 +145,25 @@ html,body
     justify-content: center;
     width: 200px;
     height: 200px;
-    top:50%;
+    top:40%;
     left:77%;
+    filter: drop-shadow(10px 10px 10px rgba(0,0,0,0.7));
+      }
+
+      #kyuu
+      {
+    position:absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 300px;
+    height: 50px;
+    top:75%;
+    left:77%;
+    font-size:25px;
+    font-weight:bold;
+    font-family:'Meiryo';
+    color:#eeeeee;
     -webkit-text-stroke: 1px #000;
     text-stroke: 1px #000;
     text-shadow: 5px 5px 15px #999999;
@@ -157,7 +175,7 @@ html,body
 
 var elem3 = document.getElementById("gamen2");
 var elem3arry=[];
-var flgcalc;
+
     //gamen2の数値変化監視
 const observer3 = new MutationObserver((mutations) =>
 {
@@ -194,20 +212,27 @@ third.innerHTML=elem3.innerHTML.slice(0,1); //3桁目
            setTimeout(function(){second.style.visibility="visible";},400);
            setTimeout(function(){third.style.visibility="visible";},800);
 
-           if(parseInt(elem3.innerHTML) < 180){
+           if((parseInt(elem3.innerHTML) < 180) && (third.style.visibility == "visible"))
+           {
             document.getElementById("img1").style.visibility="visible"
             document.getElementById("img2").style.visibility="hidden"
-            document.getElementById("img3").style.visibility="hidden"}
-           else if(180 < parseInt(elem3.innerHTML) && parseInt(elem3.innerHTML) < 210){
+            document.getElementById("img3").style.visibility="hidden"
+            //document.getElementById("kyuu").innerHTML="カエル級！"
+           }
+           else if((180 < parseInt(elem3.innerHTML)) && (parseInt(elem3.innerHTML) < 210) && (third.style.visibility == "visible"))
+           {
             document.getElementById("img1").style.visibility="hidden"
             document.getElementById("img2").style.visibility="visible"
-            document.getElementById("img3").style.visibility="hidden"}
-           else{
+            document.getElementById("img3").style.visibility="hidden"
+            //document.getElementById("kyuu").innerHTML="ウサギ級！！"
+           }
+           else if((parseInt(elem3.innerHTML) > 210) && (third.style.visibility == "visible"))
+           {
             document.getElementById("img1").style.visibility="hidden"
             document.getElementById("img2").style.visibility="hidden"
             document.getElementById("img3").style.visibility="visible"
-               };
-
+            //document.getElementById("kyuu").innerHTML="カンガルー級！！！"
+           };
           }else
           {
            first.style.visibility="hidden";
@@ -217,7 +242,10 @@ third.innerHTML=elem3.innerHTML.slice(0,1); //3桁目
            document.getElementById("img1").style.visibility="hidden";
            document.getElementById("img2").style.visibility="hidden";
            document.getElementById("img3").style.visibility="hidden";
+           //document.getElementById("kyuu").innerHTML="";
           }
+
+
           if(elem3arry.length == 50)
           {
           elem3arry.shift();
