@@ -188,8 +188,8 @@ var a1=elem3arry[elem3arry.length-2];
 var a2=elem3arry[elem3arry.length-1];
 var a3=elem3arry[elem3arry.length-6];
 var a4=elem3arry[elem3arry.length-5];
-var a5=elem3arry[elem3arry.length-10];
-var a6=elem3arry[elem3arry.length-9];
+var a5=elem3arry[elem3arry.length-16];
+var a6=elem3arry[elem3arry.length-15];
 
 var calc = document.getElementById("calc");
 
@@ -212,21 +212,21 @@ third.innerHTML=elem3.innerHTML.slice(0,1); //3桁目
            setTimeout(function(){second.style.visibility="visible";},400);
            setTimeout(function(){third.style.visibility="visible";},800);
 
-           if((parseInt(elem3.innerHTML) < 180) && (third.style.visibility == "visible"))
+           if((parseInt(elem3.innerHTML) < 200) && (third.style.visibility == "visible"))
            {
             document.getElementById("img1").style.visibility="visible"
             document.getElementById("img2").style.visibility="hidden"
             document.getElementById("img3").style.visibility="hidden"
             //document.getElementById("kyuu").innerHTML="カエル級！"
            }
-           else if((180 < parseInt(elem3.innerHTML)) && (parseInt(elem3.innerHTML) < 210) && (third.style.visibility == "visible"))
+           else if((200 < parseInt(elem3.innerHTML)) && (parseInt(elem3.innerHTML) < 230) && (third.style.visibility == "visible"))
            {
             document.getElementById("img1").style.visibility="hidden"
             document.getElementById("img2").style.visibility="visible"
             document.getElementById("img3").style.visibility="hidden"
             //document.getElementById("kyuu").innerHTML="ウサギ級！！"
            }
-           else if((parseInt(elem3.innerHTML) > 210) && (third.style.visibility == "visible"))
+           else if((parseInt(elem3.innerHTML) > 230) && (third.style.visibility == "visible"))
            {
             document.getElementById("img1").style.visibility="hidden"
             document.getElementById("img2").style.visibility="hidden"
